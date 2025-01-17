@@ -1,0 +1,13 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+instance/
+*.db
+*.sqlite3
+*.log
+*.pid
+*.sock
+*.swp
