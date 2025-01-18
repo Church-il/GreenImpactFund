@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from .extensions import db, jwt, migrate
+from .extensions.extensions import db, jwt, migrate
 from .config import Config
 from .routes.auth import auth_bp
 from .routes.donations import donations_bp
@@ -31,11 +31,9 @@ def create_app():
     return app
 
 if __name__ == '__main__':
-    from .extensions import db
-    from .models import User, Organization, Donation, Story
+    from .extensions.extensions import db
+    from .models.models import User, Organization, Donation, Story
 
-    # Create the Flask app
     app = create_app()
 
-    # Run the Flask application
     app.run(debug=True)
