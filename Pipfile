@@ -13,9 +13,9 @@ psycopg2-binary = "*"
 psycopg2 = "*"
 flask = "*"
 flask-migrate = "*"
-python-dotenv = "*"
 flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
