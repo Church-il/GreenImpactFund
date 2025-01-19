@@ -1,11 +1,16 @@
 from flask import Flask
 from flask_cors import CORS
+from dotenv import load_dotenv
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from .extensions.extensions import db, jwt, migrate
 from .config import Config
 from .routes.auth import auth_bp
 from .routes.donations import donations_bp
 from .routes.organizations import organizations_bp
 from .routes.stories import stories_bp
+
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)

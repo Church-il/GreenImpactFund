@@ -3,11 +3,11 @@ from datetime import timedelta
 
 class Config:
     # Database Configuration
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://user:password@localhost:5432/mazingira')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://mazingira_user:password123@localhost:5432/mazingira')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # JWT Configuration
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'supersecretkey')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'werTYSDFGH87DFGhgffg6543')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
 
     # CORS Configuration
