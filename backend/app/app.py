@@ -31,7 +31,7 @@ def create_app():
     # Root route
     @app.route('/')
     def index():
-        return {"message": "Welcome to Mazingira API!"}
+        return {"message": "Welcome to the Mazingira API!"}
 
     return app
 
