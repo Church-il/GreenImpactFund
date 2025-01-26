@@ -22,7 +22,7 @@ function Stories() {
 
   return (
     <PageWrapper>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1565C0', mb: 4 }}>
         Beneficiary Stories
       </Typography>
       <Grid container spacing={3}>
@@ -36,11 +36,23 @@ function Stories() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card>
+                <Card
+                  sx={{
+                    boxShadow: 3,
+                    borderRadius: 3,
+                    '&:hover': {
+                      boxShadow: 6,
+                    },
+                  }}
+                >
                   <CardContent>
-                    <Typography variant="h6">{story.title}</Typography>
-                    <Typography variant="body2">{story.content}</Typography>
-                    <Typography variant="caption" sx={{ display: 'block', mt: 2 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1565C0' }}>
+                      {story.title}
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      {story.content}
+                    </Typography>
+                    <Typography variant="caption" sx={{ display: 'block', mt: 2, color: 'gray' }}>
                       Posted on: {new Date(story.date_posted).toLocaleDateString()}
                     </Typography>
                   </CardContent>
@@ -49,9 +61,11 @@ function Stories() {
             </Grid>
           ))
         ) : (
-          <Typography variant="body1" sx={{ mt: 4 }}>
-            No stories available at the moment.
-          </Typography>
+          <Grid item xs={12}>
+            <Typography variant="body1" sx={{ textAlign: 'center', mt: 4 }}>
+              No stories available at the moment.
+            </Typography>
+          </Grid>
         )}
       </Grid>
     </PageWrapper>

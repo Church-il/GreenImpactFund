@@ -1,17 +1,79 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Card, CardContent } from '@mui/material';
+import { Box, TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PageWrapper from '../components/PageWrapper';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import styled from 'styled-components';
+
+const CardContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4caf50, #2196f3);
+  padding: 3rem;
+  transition: opacity 0.5s ease-in-out;
+  opacity: ${({ show }) => (show ? 1 : 0)};
+  margin-top: -100px; 
+`;
+
+const StyledCard = styled(Card)`
+  max-width: 400px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background: white;
+`;
+
+const StyledCardContent = styled(CardContent)`
+  padding: 40px;
+  text-align: center;
+`;
+
+const StyledButton = styled(Button)`
+  border-radius: 30px;
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 1rem;
+  width: 100%;
+  &:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const StyledTextField = styled(TextField)`
+  margin-bottom: 20px;
+  .MuiOutlinedInput-root {
+    border-radius: 20px;
+    &:hover {
+      border-color: #1e88e5;
+    }
+  }
+  .MuiInputLabel-root {
+    transition: all 0.3s ease;
+  }
+  .MuiInput-root {
+    transition: all 0.3s ease;
+  }
+  .MuiInputAdornment-root {
+    color: gray;
+  }
+`;
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [showCard, setShowCard] = useState(false);
 
   async function handleLogin() {
     try {
@@ -22,10 +84,8 @@ function Login() {
 
       const userData = response.data;
 
-      // Dispatch Redux action
       dispatch(loginSuccess(userData));
 
-      // Redirect to the home page
       navigate('/');
     } catch (err) {
       if (err.response && err.response.status === 401) {
@@ -36,106 +96,68 @@ function Login() {
     }
   }
 
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  React.useEffect(() => {
+    setShowCard(true); 
+  }, []);
+
   return (
-    <PageWrapper>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '80vh',
-          background: 'linear-gradient(135deg, #e8f5e9, #e3f2fd)', // Subtle background gradient
-          p: 3,
-        }}
-      >
-        <Card
-          sx={{
-            maxWidth: 400,
-            borderRadius: 4,
-            boxShadow: 5,
-            overflow: 'hidden',
-          }}
-        >
-          <CardContent
-            sx={{
-              p: 4,
-              textAlign: 'center',
-              background: 'linear-gradient(135deg, #a5d6a7, #80deea)',
+    <CardContainer show={showCard}>
+      <StyledCard>
+        <StyledCardContent>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#388e3c', mb: 3 }}>
+            Welcome!
+          </Typography>
+          {error && (
+            <Typography color="error" sx={{ mb: 2, fontSize: '0.9rem' }}>
+              {error}
+            </Typography>
+          )}
+          <StyledTextField
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+          />
+          <StyledTextField
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handlePasswordVisibility}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              ),
             }}
+          />
+          <StyledButton variant="contained" onClick={handleLogin}>
+            Login
+          </StyledButton>
+          <Typography
+            variant="body2"
+            sx={{
+              mt: 2,
+              fontSize: '0.9rem',
+              color: '#555',
+              cursor: 'pointer',
+              '&:hover': {
+                textDecoration: 'underline',
+                color: '#388e3c',
+              },
+            }}
+            onClick={() => navigate('/signup')}
           >
-            <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#388e3c', mb: 3 }}>
-              Welcome Back!
-            </Typography>
-            {error && (
-              <Typography color="error" sx={{ mb: 2, fontSize: '0.9rem' }}>
-                {error}
-              </Typography>
-            )}
-            <TextField
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              fullWidth
-              sx={{
-                mb: 2,
-                borderRadius: '8px',
-                '& .MuiInputBase-root': {
-                  borderRadius: '8px',
-                },
-                backgroundColor: '#ffffff',
-              }}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              fullWidth
-              sx={{
-                mb: 3,
-                borderRadius: '8px',
-                '& .MuiInputBase-root': {
-                  borderRadius: '8px',
-                },
-                backgroundColor: '#ffffff',
-              }}
-            />
-            <Button
-              variant="contained"
-              onClick={handleLogin}
-              fullWidth
-              sx={{
-                borderRadius: '20px',
-                padding: '12px',
-                backgroundColor: '#4caf50',
-                color: 'white',
-                fontSize: '1rem',
-                '&:hover': {
-                  backgroundColor: '#388e3c',
-                },
-              }}
-            >
-              Login
-            </Button>
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 2,
-                fontSize: '0.9rem',
-                color: '#555',
-                cursor: 'pointer',
-                '&:hover': {
-                  textDecoration: 'underline',
-                  color: '#388e3c',
-                },
-              }}
-            >
-              Forgot password?
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    </PageWrapper>
+            Forgot password?
+          </Typography>
+        </StyledCardContent>
+      </StyledCard>
+    </CardContainer>
   );
 }
 

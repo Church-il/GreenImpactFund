@@ -1,12 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Card, CardContent, Button } from '@mui/material';
+import styled from 'styled-components';
 import { AccountCircle, Favorite, History, Settings } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
+
+const DashboardWrapper = styled.div`
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+  opacity: ${(props) => (props.fadeIn ? 1 : 0)};
+  transform: ${(props) => (props.fadeIn ? 'translateY(0)' : 'translateY(20px)')};
+  transition: opacity 0.6s ease, transform 0.6s ease;
+`;
+
+const Heading = styled.h4`
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #1e88e5;
+`;
+
+const SubHeading = styled.p`
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 1.2rem;
+  color: #616161;
+`;
+
+const FeaturesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+`;
+
+const FeatureCard = styled.div`
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const CardContent = styled.div`
+  padding: 2rem;
+  text-align: center;
+`;
+
+const CardIcon = styled.div`
+  font-size: 40px;
+  margin-bottom: 1rem;
+`;
+
+const CardTitle = styled.h6`
+  font-weight: bold;
+  margin-top: 1rem;
+  color: #424242;
+`;
+
+const CardDescription = styled.p`
+  font-size: 0.9rem;
+  color: #757575;
+  margin-top: 1rem;
+`;
+
+const ExploreButton = styled(Link)`
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.6rem 1.5rem;
+  background-color: #42a5f5;
+  color: white;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #1e88e5;
+  }
+`;
 
 function Dashboard() {
   const [fadeIn, setFadeIn] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setFadeIn(true), 50); // Delay for smooth transition
+    setTimeout(() => setFadeIn(true), 50);
   }, []);
 
   const features = [
@@ -37,73 +116,22 @@ function Dashboard() {
   ];
 
   return (
-    <Box
-      sx={{
-        p: 4,
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #e3f2fd, #fce4ec)',
-        opacity: fadeIn ? 1 : 0,
-        transform: fadeIn ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 0.6s ease, transform 0.6s ease',
-      }}
-    >
-      <Typography
-        variant="h4"
-        sx={{ fontWeight: 'bold', textAlign: 'center', mb: 3, color: '#1e88e5' }}
-      >
-        Welcome to Your Dashboard!
-      </Typography>
-      <Typography
-        sx={{ textAlign: 'center', mb: 5, fontSize: '1.2rem', color: '#616161' }}
-      >
-        Manage your donations, profile, and settings from here.
-      </Typography>
-      <Grid container spacing={3}>
+    <DashboardWrapper fadeIn={fadeIn}>
+      <Heading>Welcome to Your Dashboard!</Heading>
+      <SubHeading>Manage your donations, profile, and settings from here.</SubHeading>
+      <FeaturesGrid>
         {features.map((feature, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card
-              sx={{
-                borderRadius: 4,
-                boxShadow: 3,
-                transition: 'transform 0.3s',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  boxShadow: 6,
-                },
-              }}
-            >
-              <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                {feature.icon}
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 'bold', mt: 2, color: '#424242' }}
-                >
-                  {feature.title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.9rem', color: '#757575', mt: 1 }}>
-                  {feature.description}
-                </Typography>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    mt: 3,
-                    borderRadius: '20px',
-                    backgroundColor: '#42a5f5',
-                    '&:hover': {
-                      backgroundColor: '#1e88e5',
-                    },
-                  }}
-                  href={feature.link}
-                >
-                  Explore
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+          <FeatureCard key={index}>
+            <CardContent>
+              <CardIcon>{feature.icon}</CardIcon>
+              <CardTitle>{feature.title}</CardTitle>
+              <CardDescription>{feature.description}</CardDescription>
+              <ExploreButton to={feature.link}>Explore</ExploreButton>
+            </CardContent>
+          </FeatureCard>
         ))}
-      </Grid>
-    </Box>
+      </FeaturesGrid>
+    </DashboardWrapper>
   );
 }
 

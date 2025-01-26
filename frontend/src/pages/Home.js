@@ -1,135 +1,186 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Card, CardContent, Typography, Button, CardMedia, Container } from '@mui/material';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Import the useNavigate hook
 import PageWrapper from '../components/PageWrapper';
+import styled from 'styled-components';
+
+const HeroSection = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #81c784, #66bb6a);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 40px;
+`;
+
+const Title = styled.h3`
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+`;
+
+const SubText = styled.p`
+  max-width: 800px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  line-height: 1.8;
+  font-size: 1.1rem;
+`;
+
+const LearnButton = styled.button`
+  background-color: #2e7d32;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    background-color: #1b5e20;
+  }
+`;
+
+const OrganizationsTitle = styled.h4`
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #2e7d32;
+`;
+
+const OrganizationsSubText = styled.p`
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  line-height: 1.8;
+  font-size: 1.1rem;
+`;
+
+const OrganizationCard = styled.div`
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 6px 6px 18px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const OrganizationImage = styled.img`
+  height: 160px;
+  object-fit: cover;
+`;
+
+const OrganizationContent = styled.div`
+  padding: 20px;
+  text-align: center;
+  flex-grow: 1;
+`;
+
+const OrgName = styled.h6`
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 10px;
+`;
+
+const OrgDescription = styled.p`
+  color: #616161;
+  margin-bottom: 20px;
+  font-style: italic;
+  font-size: 0.95rem;
+`;
+
+const DonateButton = styled.button`
+  margin-top: auto;
+  padding: 8px 16px;
+  background-color: #66bb6a;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    background-color: #388e3c;
+  }
+`;
 
 function Home() {
   const [organizations, setOrganizations] = useState([]);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);  // Get authentication status
+  const navigate = useNavigate();  // Initialize useNavigate for redirection
 
   useEffect(() => {
-    async function fetchOrganizations() {
-      try {
-        const response = await axios.get('http://127.0.0.1:5000/organizations');
-        setOrganizations(response.data.organizations);
-      } catch (error) {
-        console.error('Error fetching organizations:', error);
+    if (!isAuthenticated) {
+      navigate('/login');  // Redirect to login if not authenticated
+    } else {
+      async function fetchOrganizations() {
+        try {
+          const response = await axios.get('http://127.0.0.1:5000/organizations');
+          setOrganizations(response.data.organizations);
+        } catch (error) {
+          console.error('Error fetching organizations:', error);
+        }
       }
+      fetchOrganizations();
     }
+  }, [isAuthenticated, navigate]);  // Re-run effect when authentication status changes
 
-    fetchOrganizations();
-  }, []);
+  if (!isAuthenticated) {
+    return null;  // You could show a loading state or redirect to login
+  }
 
   return (
     <PageWrapper>
-      <Box
-        sx={{
-          textAlign: 'center',
-          py: 6,
-          px: 2,
-          background: 'linear-gradient(135deg, #81c784, #66bb6a)',
-          color: 'white',
-          borderRadius: 4,
-          mb: 5,
-        }}
-      >
-        <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
-          Together for the Planet
-        </Typography>
-        <Typography variant="h6" sx={{ maxWidth: 800, mx: 'auto', mb: 4, lineHeight: 1.8 }}>
-          Support impactful organizations making a difference in protecting the environment. 
-          Your contributions help preserve ecosystems, combat climate change, and build a 
+      <HeroSection>
+        <Title>Together for the Planet</Title>
+        <SubText>
+          Support impactful organizations making a difference in protecting the environment.
+          Your contributions help preserve ecosystems, combat climate change, and build a
           sustainable future for generations to come. Let’s take a stand for the planet—one donation at a time.
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: '#2e7d32',
-            color: 'white',
-            padding: '12px 24px',
-            fontSize: '1rem',
-            borderRadius: '30px',
-            '&:hover': { backgroundColor: '#1b5e20' },
-          }}
-        >
+        </SubText>
+        <LearnButton>
           Learn How Donations Help
-        </Button>
-      </Box>
+        </LearnButton>
+      </HeroSection>
 
-      <Container maxWidth="lg">
-        <Typography
-          variant="h4"
-          sx={{ textAlign: 'center', mb: 3, fontWeight: 'bold', color: '#2e7d32' }}
-        >
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <OrganizationsTitle>
           Explore Environmental Organizations
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ textAlign: 'center', maxWidth: 800, mx: 'auto', mb: 5, lineHeight: 1.8 }}
-        >
-          Discover organizations dedicated to restoring forests, conserving wildlife, 
-          reducing carbon emissions, and more. Every cause matters—find one that resonates with you and start contributing to a greener tomorrow.
-        </Typography>
-        <Grid container spacing={4}>
+        </OrganizationsTitle>
+        <OrganizationsSubText>
+          Discover organizations dedicated to restoring forests, conserving wildlife,
+          reducing carbon emissions, and more. Every cause matters—find one that resonates with you
+          and start contributing to a greener tomorrow.
+        </OrganizationsSubText>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
           {organizations.map((org) => (
-            <Grid item xs={12} sm={6} md={4} key={org.id}>
-              <Card
-                sx={{
-                  height: '100%',
-                  borderRadius: 4,
-                  boxShadow: 4,
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  '&:hover': {
-                    transform: 'scale(1.03)',
-                    boxShadow: 6,
-                    transition: 'transform 0.3s, box-shadow 0.3s',
-                  },
-                }}
-              >
-                {org.image && (
-                  <CardMedia
-                    component="img"
-                    height="160"
-                    image={org.image}
-                    alt={`${org.name} logo`}
-                    sx={{ objectFit: 'cover' }}
-                  />
-                )}
-                <CardContent sx={{ flexGrow: 1, textAlign: 'center', p: 3 }}>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 'bold', color: '#2e7d32', mb: 1 }}
-                  >
-                    {org.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: '#616161', mb: 2, fontStyle: 'italic' }}
-                  >
+            <div key={org.id} style={{ flex: '1 0 30%' }}>
+              <OrganizationCard>
+                {org.image && <OrganizationImage src={org.image} alt={`${org.name} logo`} />}
+                <OrganizationContent>
+                  <OrgName>{org.name}</OrgName>
+                  <OrgDescription>
                     {org.description.length > 100
                       ? `${org.description.substring(0, 100)}...`
                       : org.description}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      mt: 'auto',
-                      borderRadius: 20,
-                      padding: '8px 16px',
-                      backgroundColor: '#66bb6a',
-                      '&:hover': { backgroundColor: '#388e3c' },
-                    }}
-                    onClick={() => window.location.href = `/donate/${org.id}`}
-                  >
+                  </OrgDescription>
+                  <DonateButton onClick={() => window.location.href = `/donate/${org.id}`}>
                     Donate Now
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+                  </DonateButton>
+                </OrganizationContent>
+              </OrganizationCard>
+            </div>
           ))}
-        </Grid>
-      </Container>
+        </div>
+      </div>
     </PageWrapper>
   );
 }
