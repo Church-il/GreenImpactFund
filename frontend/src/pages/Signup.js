@@ -32,7 +32,7 @@ const StyledCard = styled(Card)`
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
   animation: ${fadeIn} 0.5s ease-out;
-  background: linear-gradient(135deg, #40E0D0, #2196F3, #FFDAB9);
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   position: relative;
   top: -80px;
 `;
@@ -77,6 +77,7 @@ const StyledTextField = styled(TextField)`
 
     fieldset {
       border-color: #dddfe2;
+      transition: border-color 0.3s ease-in-out;
     }
 
     &:hover fieldset {
@@ -90,7 +91,8 @@ const StyledTextField = styled(TextField)`
 
   .MuiInputLabel-root {
     color: #606770;
-    
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+
     &.Mui-focused {
       color: #1877f2;
     }
@@ -100,6 +102,7 @@ const StyledTextField = styled(TextField)`
     margin-right: 8px;
   }
 `;
+
 
 const Divider = styled.div`
   display: flex;
@@ -205,7 +208,7 @@ function Signup() {
             variant="h4" 
             sx={{ 
               fontWeight: 600,
-              color: '#1877f2',
+              color: 'red',
               marginBottom: '8px'
             }}
           >
@@ -214,7 +217,7 @@ function Signup() {
           <Typography 
             variant="body1" 
             sx={{ 
-              color: '#86003C',
+              color: 'green',
               marginBottom: '24px'
             }}
           >

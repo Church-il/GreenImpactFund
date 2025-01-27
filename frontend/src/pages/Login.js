@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Card, CardContent, IconButton, Checkbox, FormControlLabel } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+} from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +34,6 @@ const CardContainer = styled.div`
   min-height: 100vh;
   background: url('/images/trees.jpg') no-repeat center center/cover;
   padding: 20px;
-  top: 100px;
   box-sizing: border-box;
 `;
 
@@ -33,16 +41,16 @@ const StyledCard = styled(Card)`
   max-width: 400px;
   width: 100%;
   background: linear-gradient(135deg, #ffffff, #f9f9f9);
-  padding: 1rem 2rem;
-  border-radius: 40px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 2rem;
+  border-radius: 16px; /* Reduced rounding */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  animation: ${fadeIn} 1s ease-out;
-  margin-top: -230px;
+  animation: ${fadeIn} 0.8s ease-out;
+  margin-top: -150px;
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -50,25 +58,26 @@ const StyledCardContent = styled(CardContent)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0;
+  padding: 20px -5px -5px; 
   width: 100%;
   gap: 16px;
 `;
 
+
 const StyledButton = styled(Button)`
   width: 100%;
-  padding: 12px;
-  border-radius: 30px;
+  padding: 10px;
+  border-radius: 20px; /* Adjusted rounding */
   background-color: #4caf50;
   color: white;
   font-size: 1rem;
   margin-top: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   text-transform: none;
   &:hover {
     background-color: #388e3c;
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -76,7 +85,7 @@ const StyledTextField = styled(TextField)`
   margin-bottom: 16px;
   width: 100%;
   .MuiOutlinedInput-root {
-    border-radius: 12px;
+    border-radius: 8px; /* Reduced rounding */
     &:hover {
       border-color: #1e88e5;
     }
@@ -163,7 +172,12 @@ function Login() {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#FD5602', mb: 1.5, textAlign: 'center', fontStyle: 'italic' }}
+            sx={{
+              color: '#FD5602',
+              mb: 1.5,
+              textAlign: 'center',
+              fontStyle: 'italic',
+            }}
           >
             "The Earth is what we all have in common."
           </Typography>
