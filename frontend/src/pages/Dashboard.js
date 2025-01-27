@@ -4,84 +4,107 @@ import { AccountCircle, Favorite, History, Settings } from '@mui/icons-material'
 import { Link } from 'react-router-dom';
 
 const DashboardWrapper = styled.div`
-  padding: 2rem;
+  padding: 3rem;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+  background: url('/images/eco.jpg') no-repeat center center/cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   opacity: ${(props) => (props.fadeIn ? 1 : 0)};
-  transform: ${(props) => (props.fadeIn ? 'translateY(0)' : 'translateY(20px)')};
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: ${(props) => (props.fadeIn ? 'translateY(0)' : 'translateY(30px)')};
+  transition: opacity 0.8s ease, transform 0.8s ease;
 `;
 
-const Heading = styled.h4`
-  font-weight: bold;
+const Heading = styled.h1`
+  font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
-  color: #1e88e5;
+  color:rgb(9, 26, 110);
+  letter-spacing: 1px;
+  font-size: 2.5rem;
 `;
 
 const SubHeading = styled.p`
   text-align: center;
-  margin-bottom: 3rem;
-  font-size: 1.2rem;
-  color: #616161;
+  font-size: 1.3rem;
+  color: #000000;
+  margin-bottom: 4rem;
+  line-height: 1.5;
 `;
 
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
 `;
 
 const FeatureCard = styled.div`
   background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  transition: all 0.4s ease-in-out;
+  transform: scale(1);
+
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const CardContent = styled.div`
   padding: 2rem;
   text-align: center;
+  position: relative;
+  z-index: 1;
 `;
 
 const CardIcon = styled.div`
-  font-size: 40px;
-  margin-bottom: 1rem;
+  font-size: 50px;
+  color: ${(props) => props.color || '#42a5f5'};
+  margin-bottom: 1.5rem;
+  transition: color 0.3s ease;
 `;
 
-const CardTitle = styled.h6`
-  font-weight: bold;
-  margin-top: 1rem;
+const CardTitle = styled.h3`
+  font-weight: 700;
+  font-size: 1.4rem;
   color: #424242;
+  margin-top: 1rem;
 `;
 
 const CardDescription = styled.p`
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #757575;
   margin-top: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
 `;
 
 const ExploreButton = styled(Link)`
   display: inline-block;
-  margin-top: 2rem;
-  padding: 0.6rem 1.5rem;
+  padding: 0.7rem 1.8rem;
   background-color: #42a5f5;
   color: white;
-  border-radius: 20px;
-  font-weight: bold;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.1rem;
   text-decoration: none;
-  transition: background-color 0.3s ease;
-  
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
   &:hover {
-    background-color: #1e88e5;
+    background-color: #6e11e5;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   }
 `;
 
-function Dashboard() {
+const Dashboard = () => {
   const [fadeIn, setFadeIn] = useState(false);
 
   useEffect(() => {
@@ -91,26 +114,26 @@ function Dashboard() {
   const features = [
     {
       title: 'Manage Profile',
-      description: 'Update your personal details and preferences.',
-      icon: <AccountCircle sx={{ fontSize: 40, color: '#42a5f5' }} />,
+      description: 'Update your personal details and preferences to tailor your experience.',
+      icon: <AccountCircle sx={{ fontSize: 50, color: '#42a5f5' }} />,
       link: '/profile',
     },
     {
       title: 'Your Donations',
-      description: 'View and track your donation history.',
-      icon: <Favorite sx={{ fontSize: 40, color: '#ef5350' }} />,
+      description: 'View, manage, and track your donations and their impact.',
+      icon: <Favorite sx={{ fontSize: 50, color: '#ef5350' }} />,
       link: '/donations',
     },
     {
       title: 'Donation History',
-      description: 'Check past contributions and manage receipts.',
-      icon: <History sx={{ fontSize: 40, color: '#66bb6a' }} />,
+      description: 'Review past donations and manage your receipts for tax purposes.',
+      icon: <History sx={{ fontSize: 50, color: '#66bb6a' }} />,
       link: '/history',
     },
     {
       title: 'Settings',
-      description: 'Customize your account preferences.',
-      icon: <Settings sx={{ fontSize: 40, color: '#ffa726' }} />,
+      description: 'Customize your account preferences for a better experience.',
+      icon: <Settings sx={{ fontSize: 50, color: '#ffa726' }} />,
       link: '/settings',
     },
   ];
@@ -118,12 +141,14 @@ function Dashboard() {
   return (
     <DashboardWrapper fadeIn={fadeIn}>
       <Heading>Welcome to Your Dashboard!</Heading>
-      <SubHeading>Manage your donations, profile, and settings from here.</SubHeading>
+      <SubHeading>
+        Easily manage your donations, track progress, update settings, and more. Let's make an impact together!
+      </SubHeading>
       <FeaturesGrid>
         {features.map((feature, index) => (
           <FeatureCard key={index}>
             <CardContent>
-              <CardIcon>{feature.icon}</CardIcon>
+              <CardIcon color={feature.icon.props.color}>{feature.icon}</CardIcon>
               <CardTitle>{feature.title}</CardTitle>
               <CardDescription>{feature.description}</CardDescription>
               <ExploreButton to={feature.link}>Explore</ExploreButton>
@@ -133,6 +158,6 @@ function Dashboard() {
       </FeaturesGrid>
     </DashboardWrapper>
   );
-}
+};
 
 export default Dashboard;
