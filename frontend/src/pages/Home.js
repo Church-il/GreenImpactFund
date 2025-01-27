@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Import the useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/PageWrapper';
 import styled from 'styled-components';
 
@@ -42,11 +42,24 @@ const LearnButton = styled.button`
   }
 `;
 
-const OrganizationsTitle = styled.h4`
+const OrganizationsTitle = styled.button`
+  display: inline-block;
   text-align: center;
   margin-bottom: 15px;
   font-weight: bold;
-  color: #2e7d32;
+  color: white;
+  background-color: #2e7d32;
+  border: none;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #1b5e20;
+    transform: scale(1.05);
+  }
 `;
 
 const OrganizationsSubText = styled.p`
@@ -113,12 +126,12 @@ const DonateButton = styled.button`
 
 function Home() {
   const [organizations, setOrganizations] = useState([]);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);  // Get authentication status
-  const navigate = useNavigate();  // Initialize useNavigate for redirection
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');  // Redirect to login if not authenticated
+      navigate('/login');
     } else {
       async function fetchOrganizations() {
         try {
@@ -130,10 +143,10 @@ function Home() {
       }
       fetchOrganizations();
     }
-  }, [isAuthenticated, navigate]);  // Re-run effect when authentication status changes
+  }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) {
-    return null;  // You could show a loading state or redirect to login
+    return null;
   }
 
   return (
@@ -141,19 +154,19 @@ function Home() {
       <HeroSection>
         <Title>Together for the Planet</Title>
         <SubText>
-        Imagine a world where forests thrive, oceans flourish, and clean air is a reality for all. By supporting impactful organizations, you become a force for change—protecting ecosystems, fighting climate change, and building a sustainable future. Together, we can restore nature’s balance, empower communities, and leave a legacy of hope for generations to come. Let’s unite to safeguard our planet, one act of generosity at a time.
+          Imagine a world where forests thrive, oceans flourish, and clean air is a reality for all. By supporting impactful organizations, you become a force for change—protecting ecosystems, fighting climate change, and building a sustainable future. Together, we can restore nature’s balance, empower communities, and leave a legacy of hope for generations to come. Let’s unite to safeguard our planet, one act of generosity at a time.
         </SubText>
         <LearnButton>
           Learn How Donations Help
         </LearnButton>
       </HeroSection>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <OrganizationsTitle>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <OrganizationsTitle onClick={() => navigate('/organizations')}>
           Explore Environmental Organizations
         </OrganizationsTitle>
         <OrganizationsSubText>
-        Explore organizations devoted to restoring lush forests, safeguarding endangered wildlife, reducing harmful carbon emissions, and promoting innovative solutions for a sustainable future. Each cause holds the power to create positive change—choose one that inspires you and take the first step toward making a lasting difference. Together, we can build a healthier planet and secure a brighter future for generations to come.
+          Explore organizations devoted to restoring lush forests, safeguarding endangered wildlife, reducing harmful carbon emissions, and promoting innovative solutions for a sustainable future. Each cause holds the power to create positive change—choose one that inspires you and take the first step toward making a lasting difference. Together, we can build a healthier planet and secure a brighter future for generations to come.
         </OrganizationsSubText>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
