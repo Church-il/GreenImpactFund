@@ -34,7 +34,7 @@ const StyledCard = styled(Card)`
   animation: ${fadeIn} 0.5s ease-out;
   background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   position: relative;
-  top: -80px;
+  top: -85px;
 `;
 
 const StyledCardContent = styled(CardContent)`
