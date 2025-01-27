@@ -10,7 +10,7 @@ const CardContainer = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 105vh;
-  background: linear-gradient(135deg, #4caf50, #2196f3); 
+  background: linear-gradient(135deg,rgb(18, 198, 24), #2196f3); 
   transition: opacity 0.5s ease-in-out;
   opacity: ${({ show }) => (show ? 1 : 0)};
   margin-top: -80px; 

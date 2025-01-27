@@ -12,7 +12,7 @@ const CardContainer = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #4caf50, #2196f3);
+  background: linear-gradient(135deg,rgb(32, 213, 38),rgb(19, 140, 239));
   padding: 3rem;
   transition: opacity 0.5s ease-in-out;
   opacity: ${({ show }) => (show ? 1 : 0)};
@@ -23,7 +23,7 @@ const StyledCard = styled(Card)`
   max-width: 420px;
   width: 100%;
   background: linear-gradient(135deg, #ffffff, #f1f1f1);
-  padding: 2rem;
+  padding: -5rem;
   border-radius: 20px;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
