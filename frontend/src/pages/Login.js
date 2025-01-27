@@ -42,7 +42,7 @@ const StyledCard = styled(Card)`
   align-items: center;
   box-sizing: border-box;
   animation: ${fadeIn} 1s ease-out;
-  margin-top: -210px;
+  margin-top: -230px;
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -158,14 +158,14 @@ function Login() {
     <CardContainer>
       <StyledCard>
         <StyledCardContent>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#388e3c', mb: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'green', mb: 1 }}>
             Welcome Back!
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#777', mb: 1.5, textAlign: 'center' }}
+            sx={{ color: '#FD5602', mb: 1.5, textAlign: 'center', fontStyle: 'italic' }}
           >
-            Enter your credentials to access your account.
+            "The Earth is what we all have in common."
           </Typography>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <StyledTextField

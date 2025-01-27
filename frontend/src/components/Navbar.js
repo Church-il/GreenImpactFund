@@ -28,7 +28,8 @@ function Navbar() {
             cursor: 'pointer',
             fontWeight: 'bold',
             color: 'white',
-            letterSpacing: '1px',
+            letterSpacing: '0px',
+            fontStyle: 'italic',
           }}
           onClick={() => navigate('/')}
         >

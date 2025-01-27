@@ -23,7 +23,7 @@ const CardContainer = styled.div`
   height: 90vh;
   background: url('/images/humanrights.jpg') no-repeat center center/cover;
   padding: 24px;
-  overflow: hidden;  // This removes the scroll bar
+  overflow: hidden;  
 `;
 
 const StyledCard = styled(Card)`
@@ -32,9 +32,9 @@ const StyledCard = styled(Card)`
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
   animation: ${fadeIn} 0.5s ease-out;
-  background: white;
+  background: linear-gradient(135deg, #40E0D0, #2196F3, #FFDAB9);
   position: relative;
-  top: -60px;  // This moves the card higher
+  top: -80px;
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -214,7 +214,7 @@ function Signup() {
           <Typography 
             variant="body1" 
             sx={{ 
-              color: '#606770',
+              color: '#86003C',
               marginBottom: '24px'
             }}
           >
