@@ -141,9 +141,7 @@ function Home() {
       <HeroSection>
         <Title>Together for the Planet</Title>
         <SubText>
-          Support impactful organizations making a difference in protecting the environment.
-          Your contributions help preserve ecosystems, combat climate change, and build a
-          sustainable future for generations to come. Let’s take a stand for the planet—one donation at a time.
+        Imagine a world where forests thrive, oceans flourish, and clean air is a reality for all. By supporting impactful organizations, you become a force for change—protecting ecosystems, fighting climate change, and building a sustainable future. Together, we can restore nature’s balance, empower communities, and leave a legacy of hope for generations to come. Let’s unite to safeguard our planet, one act of generosity at a time.
         </SubText>
         <LearnButton>
           Learn How Donations Help
@@ -155,9 +153,7 @@ function Home() {
           Explore Environmental Organizations
         </OrganizationsTitle>
         <OrganizationsSubText>
-          Discover organizations dedicated to restoring forests, conserving wildlife,
-          reducing carbon emissions, and more. Every cause matters—find one that resonates with you
-          and start contributing to a greener tomorrow.
+        Explore organizations devoted to restoring lush forests, safeguarding endangered wildlife, reducing harmful carbon emissions, and promoting innovative solutions for a sustainable future. Each cause holds the power to create positive change—choose one that inspires you and take the first step toward making a lasting difference. Together, we can build a healthier planet and secure a brighter future for generations to come.
         </OrganizationsSubText>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>

@@ -1,10 +1,19 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Home, Login, PersonAdd, Dashboard } from '@mui/icons-material';
+import { Home, Login, PersonAdd, Dashboard, ExitToApp } from '@mui/icons-material';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/slices/authSlice';
 
 function Navbar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
 
   return (
     <AppBar position="sticky" sx={{
@@ -23,57 +32,79 @@ function Navbar() {
           }}
           onClick={() => navigate('/')}
         >
-          Green Impact Fund
+          Mazingira - Green Impact Fund
         </Typography>
         <Box>
-          <Button
-            color="inherit"
-            sx={{
-              marginRight: 2,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: '#388e3c',
-                color: '#fff',
-              },
-            }}
-            onClick={() => navigate('/login')}
-            startIcon={<Login />}
-          >
-            Login
-          </Button>
-          <Button
-            color="inherit"
-            sx={{
-              marginRight: 2,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: '#388e3c',
-                color: '#fff',
-              },
-            }}
-            onClick={() => navigate('/signup')}
-            startIcon={<PersonAdd />}
-          >
-            Sign Up
-          </Button>
-          <Button
-            color="inherit"
-            sx={{
-              marginRight: 2,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: '#388e3c',
-                color: '#fff',
-              },
-            }}
-            onClick={() => navigate('/dashboard')}
-            startIcon={<Dashboard />}
-          >
-            Dashboard
-          </Button>
+          {!isAuthenticated ? (
+            <>
+              <Button
+                color="inherit"
+                sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#388e3c',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/login')}
+                startIcon={<Login />}
+              >
+                Login
+              </Button>
+              <Button
+                color="inherit"
+                sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#388e3c',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/signup')}
+                startIcon={<PersonAdd />}
+              >
+                Sign Up
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                color="inherit"
+                sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#388e3c',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/dashboard')}
+                startIcon={<Dashboard />}
+              >
+                Dashboard
+              </Button>
+              <Button
+                color="inherit"
+                sx={{
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#388e3c',
+                    color: '#fff',
+                  },
+                }}
+                onClick={handleLogout}
+                startIcon={<ExitToApp />}
+              >
+                Logout
+              </Button>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

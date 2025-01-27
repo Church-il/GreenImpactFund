@@ -85,7 +85,7 @@ function Signup() {
       setError('');
       setTimeout(() => {
         navigate('/login');
-      }, 2000);
+      }, 500);
     } catch (err) {
       setError('Signup failed. Please try again.');
       setMessage('');
@@ -105,7 +105,7 @@ function Signup() {
       <StyledCard>
         <StyledCardContent>
           <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1565C0', mb: 3 }}>
-            Join Us!
+            Be the Change!
           </Typography>
           {message && (
             <Typography color="success.main" sx={{ mb: 2 }}>
