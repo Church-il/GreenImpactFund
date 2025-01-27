@@ -1,109 +1,193 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import axios from 'axios';
 import { AccountCircle, Email, Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const CardContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 105vh;
-  background: linear-gradient(135deg,rgb(18, 198, 24), #2196f3); 
-  transition: opacity 0.5s ease-in-out;
-  opacity: ${({ show }) => (show ? 1 : 0)};
-  margin-top: -80px; 
+  min-height: 100vh;
+  background: #f0f2f5;
+  padding: 24px;
 `;
 
 const StyledCard = styled(Card)`
-  max-width: 450px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  max-width: 400px;
   width: 100%;
-  background: white; 
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  animation: ${fadeIn} 0.5s ease-out;
+  background: white;
+  position: relative;
+  top: -40px;
 `;
 
 const StyledCardContent = styled(CardContent)`
-  padding: 40px;
+  padding: 24px;
   text-align: center;
-  background: #ffffff;
-  border-radius: 20px;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px 0;
 `;
 
 const StyledButton = styled(Button)`
-  border-radius: 30px;
-  padding: 14px;
-  background-color: #1e88e5;
-  color: white;
-  font-size: 1.1rem;
+  margin: 16px 0;
+  padding: 10px 0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #1877f2;
+  box-shadow: none;
+
   &:hover {
-    background-color: #1565c0;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #166fe5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 `;
 
 const StyledTextField = styled(TextField)`
-  margin-bottom: 20px;
   .MuiOutlinedInput-root {
-    border-radius: 20px;
-    &:hover {
-      border-color: #1e88e5;
+    border-radius: 6px;
+    background: white;
+
+    fieldset {
+      border-color: #dddfe2;
+    }
+
+    &:hover fieldset {
+      border-color: #1877f2;
+    }
+
+    &.Mui-focused fieldset {
+      border-color: #1877f2;
     }
   }
+
   .MuiInputLabel-root {
-    transition: all 0.3s ease;
+    color: #606770;
+    
+    &.Mui-focused {
+      color: #1877f2;
+    }
   }
-  .MuiInput-root {
-    transition: all 0.3s ease;
-  }
+
   .MuiInputAdornment-root {
-    color: gray;
+    margin-right: 8px;
+  }
+`;
+
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dadde1;
   }
 `;
 
 const StyledLink = styled(Typography)`
-  margin-top: 15px;
-  font-size: 0.9rem;
-  color: #1565c0;
+  color: #1877f2;
   cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 8px;
+  
   &:hover {
     text-decoration: underline;
   }
 `;
 
+const ErrorMessage = styled(Typography)`
+  color: #ff1744;
+  font-size: 0.875rem;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  display: ${props => props.show ? 'block' : 'none'};
+`;
+
+const SuccessMessage = styled(Typography)`
+  color: #2e7d32;
+  font-size: 0.875rem;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #e8f5e9;
+  border-radius: 4px;
+  display: ${props => props.show ? 'block' : 'none'};
+`;
+
 function Signup() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [showCard, setShowCard] = useState(false);
   const navigate = useNavigate();
 
-  async function handleSignup() {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value.trim()
+    }));
+  };
+
+  const handleSignup = async () => {
+    if (!formData.username || !formData.email || !formData.password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
     try {
-      const response = await axios.post('http://127.0.0.1:5000/auth/signup', {
-        username,
-        email,
-        password,
-      });
-      setMessage('Signup successful! Please log in.');
+      await axios.post('http://127.0.0.1:5000/auth/signup', formData);
+      setMessage('Account created successfully!');
       setError('');
-      setTimeout(() => {
-        navigate('/login');
-      }, 700);
+      setTimeout(() => navigate('/login'), 1000);
     } catch (err) {
-      setError('Signup failed. Please try again.');
+      setError(err.response?.data?.message || 'Signup failed. Please try again.');
       setMessage('');
     }
-  }
+  };
 
-  const handlePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const handleKeyPress = (e) => {
@@ -112,72 +196,98 @@ function Signup() {
     }
   };
 
-  useEffect(() => {
-    setShowCard(true);
-  }, []);
-
   return (
-    <CardContainer show={showCard}>
+    <CardContainer>
       <StyledCard>
         <StyledCardContent>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1565C0', mb: 3 }}>
-            Be the Change!
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              fontWeight: 600,
+              color: '#1877f2',
+              marginBottom: '8px'
+            }}
+          >
+            Join Us Today
           </Typography>
-          {message && (
-            <Typography color="success.main" sx={{ mb: 2 }}>
-              {message}
-            </Typography>
-          )}
-          {error && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
-          )}
-          <StyledTextField
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            onKeyPress={handleKeyPress}
-            fullWidth
-            InputProps={{
-              startAdornment: <AccountCircle sx={{ color: 'gray', mr: 1 }} />,
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: '#606770',
+              marginBottom: '24px'
             }}
-          />
-          <StyledTextField
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyPress={handleKeyPress}
-            fullWidth
-            InputProps={{
-              startAdornment: <Email sx={{ color: 'gray', mr: 1 }} />,
-            }}
-          />
-          <StyledTextField
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyPress={handleKeyPress}
-            fullWidth
-            InputProps={{
-              startAdornment: <Lock sx={{ color: 'gray', mr: 1 }} />,
-              endAdornment: (
-                <IconButton onClick={handlePasswordVisibility}>
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              ),
-            }}
-          />
+          >
+            Start making a difference in your community
+          </Typography>
+
+          <ErrorMessage show={error}>
+            {error}
+          </ErrorMessage>
+          
+          <SuccessMessage show={message}>
+            {message}
+          </SuccessMessage>
+
+          <FormContainer>
+            <StyledTextField
+              name="username"
+              label="Username"
+              value={formData.username}
+              onChange={handleChange}
+              onKeyPress={handleKeyPress}
+              fullWidth
+              InputProps={{
+                startAdornment: <AccountCircle sx={{ color: '#606770' }} />,
+              }}
+            />
+            <StyledTextField
+              name="email"
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              onKeyPress={handleKeyPress}
+              fullWidth
+              InputProps={{
+                startAdornment: <Email sx={{ color: '#606770' }} />,
+              }}
+            />
+            <StyledTextField
+              name="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              value={formData.password}
+              onChange={handleChange}
+              onKeyPress={handleKeyPress}
+              fullWidth
+              InputProps={{
+                startAdornment: <Lock sx={{ color: '#606770' }} />,
+                endAdornment: (
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                    size="small"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
+            />
+          </FormContainer>
+
           <StyledButton
             variant="contained"
             fullWidth
             onClick={handleSignup}
+            disableElevation
           >
-            Signup
+            Create Account
           </StyledButton>
+
+          <Divider />
+
           <StyledLink onClick={() => navigate('/login')}>
-            Already have an account? Login
+            Already have an account? Sign in
           </StyledLink>
         </StyledCardContent>
       </StyledCard>
