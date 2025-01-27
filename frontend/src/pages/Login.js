@@ -108,6 +108,12 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   useEffect(() => {
     setShowCard(true);
   }, []);
@@ -131,6 +137,7 @@ function Login() {
             fullWidth
             required
             variant="outlined"
+            onKeyDown={handleKeyPress}
           />
           <StyledTextField
             label="Password"
@@ -147,6 +154,7 @@ function Login() {
                 </IconButton>
               ),
             }}
+            onKeyDown={handleKeyPress}
           />
           <StyledButton variant="contained" onClick={handleLogin}>
             Login
@@ -165,7 +173,7 @@ function Login() {
             }}
             onClick={() => navigate('/signup')}
           >
-            Forgot password?
+            Don't have an account?
           </Typography>
         </StyledCardContent>
       </StyledCard>

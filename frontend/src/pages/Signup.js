@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import axios from 'axios';
 import { AccountCircle, Email, Lock, Visibility, VisibilityOff } from '@mui/icons-material';
@@ -95,7 +95,7 @@ function Signup() {
       setError('');
       setTimeout(() => {
         navigate('/login');
-      }, 500);
+      }, 700);
     } catch (err) {
       setError('Signup failed. Please try again.');
       setMessage('');
@@ -106,7 +106,13 @@ function Signup() {
     setShowPassword(!showPassword);
   };
 
-  React.useEffect(() => {
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSignup();
+    }
+  };
+
+  useEffect(() => {
     setShowCard(true);
   }, []);
 
@@ -131,6 +137,7 @@ function Signup() {
             label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            onKeyPress={handleKeyPress}
             fullWidth
             InputProps={{
               startAdornment: <AccountCircle sx={{ color: 'gray', mr: 1 }} />,
@@ -140,6 +147,7 @@ function Signup() {
             label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyPress={handleKeyPress}
             fullWidth
             InputProps={{
               startAdornment: <Email sx={{ color: 'gray', mr: 1 }} />,
@@ -150,6 +158,7 @@ function Signup() {
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyPress={handleKeyPress}
             fullWidth
             InputProps={{
               startAdornment: <Lock sx={{ color: 'gray', mr: 1 }} />,
