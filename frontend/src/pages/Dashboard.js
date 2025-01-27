@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { AccountCircle, Favorite, History, Settings } from '@mui/icons-material';
+import { AccountCircle, Favorite, History, Settings, Home } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const DashboardWrapper = styled.div`
@@ -104,6 +104,25 @@ const ExploreButton = styled(Link)`
   }
 `;
 
+const HomeButton = styled(Link)`
+  padding: 0.7rem 1.8rem;
+  background-color: #42a5f5;
+  color: white;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color:rgb(226, 7, 7);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  }
+`;
+
 const Dashboard = () => {
   const [fadeIn, setFadeIn] = useState(false);
 
@@ -140,6 +159,7 @@ const Dashboard = () => {
 
   return (
     <DashboardWrapper fadeIn={fadeIn}>
+      <HomeButton to="/">Home</HomeButton>
       <Heading>Welcome to Your Dashboard!</Heading>
       <SubHeading>
         Easily manage your donations, track progress, update settings, and more. Let's make an impact together!
