@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import PageWrapper from '../components/PageWrapper';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import styled from 'styled-components';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const CardContainer = styled.div`
   display: flex;
@@ -17,15 +16,21 @@ const CardContainer = styled.div`
   padding: 3rem;
   transition: opacity 0.5s ease-in-out;
   opacity: ${({ show }) => (show ? 1 : 0)};
-  margin-top: -100px; 
+  margin-top: -100px;
 `;
 
 const StyledCard = styled(Card)`
-  max-width: 400px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 420px;
   width: 100%;
-  background: white;
+  background: linear-gradient(135deg, #ffffff, #f1f1f1);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -34,31 +39,34 @@ const StyledCardContent = styled(CardContent)`
 `;
 
 const StyledButton = styled(Button)`
+  width: 100%;
+  padding: 14px;
   border-radius: 30px;
-  padding: 12px;
   background-color: #4caf50;
   color: white;
-  font-size: 1rem;
-  width: 100%;
+  font-size: 1.1rem;
+  margin-top: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   &:hover {
     background-color: #388e3c;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const StyledTextField = styled(TextField)`
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  width: 100%;
   .MuiOutlinedInput-root {
-    border-radius: 20px;
+    border-radius: 8px;
     &:hover {
       border-color: #1e88e5;
     }
+    &.Mui-focused {
+      border-color: #388e3c;
+    }
   }
   .MuiInputLabel-root {
-    transition: all 0.3s ease;
-  }
-  .MuiInput-root {
     transition: all 0.3s ease;
   }
   .MuiInputAdornment-root {
@@ -100,8 +108,8 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  React.useEffect(() => {
-    setShowCard(true); 
+  useEffect(() => {
+    setShowCard(true);
   }, []);
 
   return (
@@ -121,6 +129,8 @@ function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
+            required
+            variant="outlined"
           />
           <StyledTextField
             label="Password"
@@ -128,6 +138,8 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
+            required
+            variant="outlined"
             InputProps={{
               endAdornment: (
                 <IconButton onClick={handlePasswordVisibility}>

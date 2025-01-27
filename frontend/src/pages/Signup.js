@@ -10,7 +10,7 @@ const CardContainer = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 105vh;
-  background: linear-gradient(135deg, #4caf50, #2196f3); /* Green and Blue gradient */
+  background: linear-gradient(135deg, #4caf50, #2196f3); 
   transition: opacity 0.5s ease-in-out;
   opacity: ${({ show }) => (show ? 1 : 0)};
   margin-top: -80px; 
@@ -22,7 +22,7 @@ const StyledCard = styled(Card)`
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 100%;
-  background: white; /* White background for the form */
+  background: white; 
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -64,6 +64,16 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
+const StyledLink = styled(Typography)`
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #1565c0;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 function Signup() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -97,7 +107,7 @@ function Signup() {
   };
 
   React.useEffect(() => {
-    setShowCard(true); // Trigger the transition effect when the component mounts
+    setShowCard(true);
   }, []);
 
   return (
@@ -157,6 +167,9 @@ function Signup() {
           >
             Signup
           </StyledButton>
+          <StyledLink onClick={() => navigate('/login')}>
+            Already have an account? Login
+          </StyledLink>
         </StyledCardContent>
       </StyledCard>
     </CardContainer>
