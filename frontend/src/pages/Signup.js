@@ -20,9 +20,10 @@ const CardContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #f0f2f5;
+  height: 90vh;
+  background: url('/images/humanrights.jpg') no-repeat center center/cover;
   padding: 24px;
+  overflow: hidden;  // This removes the scroll bar
 `;
 
 const StyledCard = styled(Card)`
@@ -33,7 +34,7 @@ const StyledCard = styled(Card)`
   animation: ${fadeIn} 0.5s ease-out;
   background: white;
   position: relative;
-  top: -40px;
+  top: -60px;  // This moves the card higher
 `;
 
 const StyledCardContent = styled(CardContent)`
@@ -44,7 +45,7 @@ const StyledCardContent = styled(CardContent)`
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   margin: 16px 0;
 `;
 
@@ -136,7 +137,7 @@ const ErrorMessage = styled(Typography)`
 `;
 
 const SuccessMessage = styled(Typography)`
-  color: #2e7d32;
+  color:rgb(17, 162, 24);
   font-size: 0.875rem;
   margin-top: 8px;
   padding: 8px 12px;
@@ -177,7 +178,7 @@ function Signup() {
 
     try {
       await axios.post('http://127.0.0.1:5000/auth/signup', formData);
-      setMessage('Account created successfully!');
+      setMessage('Account Created Successfully!');
       setError('');
       setTimeout(() => navigate('/login'), 1000);
     } catch (err) {
@@ -208,7 +209,7 @@ function Signup() {
               marginBottom: '8px'
             }}
           >
-            Join Us Today
+            Make a Difference!
           </Typography>
           <Typography 
             variant="body1" 
@@ -217,7 +218,7 @@ function Signup() {
               marginBottom: '24px'
             }}
           >
-            Start making a difference in your community
+            Be the change you wish to see, start now.
           </Typography>
 
           <ErrorMessage show={error}>

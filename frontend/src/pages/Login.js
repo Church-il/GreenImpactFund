@@ -23,17 +23,18 @@ const CardContainer = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, rgb(32, 213, 38), rgb(19, 140, 239));
+  background: url('/images/trees.jpg') no-repeat center center/cover;
   padding: 20px;
+  top: 100px;
   box-sizing: border-box;
 `;
 
 const StyledCard = styled(Card)`
-  max-width: 450px;
+  max-width: 400px;
   width: 100%;
   background: linear-gradient(135deg, #ffffff, #f9f9f9);
-  padding: 1.5rem 2.5rem;
-  border-radius: 50px;
+  padding: 1rem 2rem;
+  border-radius: 40px;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
   display: flex;
@@ -41,9 +42,8 @@ const StyledCard = styled(Card)`
   align-items: center;
   box-sizing: border-box;
   animation: ${fadeIn} 1s ease-out;
-  margin-top: -50px;
+  margin-top: -210px;
 `;
-
 
 const StyledCardContent = styled(CardContent)`
   display: flex;
@@ -52,17 +52,17 @@ const StyledCardContent = styled(CardContent)`
   align-items: center;
   padding: 0;
   width: 100%;
-  gap: 20px;
+  gap: 16px;
 `;
 
 const StyledButton = styled(Button)`
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border-radius: 30px;
   background-color: #4caf50;
   color: white;
-  font-size: 1.2rem;
-  margin-top: 20px;
+  font-size: 1rem;
+  margin-top: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-transform: none;
   &:hover {
@@ -73,7 +73,7 @@ const StyledButton = styled(Button)`
 `;
 
 const StyledTextField = styled(TextField)`
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   width: 100%;
   .MuiOutlinedInput-root {
     border-radius: 12px;
@@ -94,7 +94,7 @@ const StyledTextField = styled(TextField)`
 
 const ErrorMessage = styled(Typography)`
   color: red;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin-bottom: 16px;
   text-align: center;
 `;
@@ -102,7 +102,7 @@ const ErrorMessage = styled(Typography)`
 const RememberMeLabel = styled(FormControlLabel)`
   align-self: flex-start;
   .MuiTypography-root {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #555;
   }
 `;
@@ -158,12 +158,12 @@ function Login() {
     <CardContainer>
       <StyledCard>
         <StyledCardContent>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#388e3c', mb: 2 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#388e3c', mb: 1 }}>
             Welcome Back!
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#777', mb: 2, textAlign: 'center' }}
+            sx={{ color: '#777', mb: 1.5, textAlign: 'center' }}
           >
             Enter your credentials to access your account.
           </Typography>
@@ -208,13 +208,13 @@ function Login() {
           <Typography
             variant="body2"
             sx={{
-              mt: 2,
-              fontSize: '0.9rem',
+              mt: 1.5,
+              fontSize: '0.85rem',
               color: '#555',
               cursor: 'pointer',
               '&:hover': {
                 textDecoration: 'underline',
-                color: '#388e3c',
+                color: 'red',
               },
             }}
             onClick={() => navigate('/signup')}
@@ -224,13 +224,13 @@ function Login() {
           <Typography
             variant="body2"
             sx={{
-              mt: 1,
-              fontSize: '0.85rem',
-              color: '#888',
+              mt: 0.8,
+              fontSize: '0.8rem',
+              color: 'green',
               cursor: 'pointer',
               '&:hover': {
                 textDecoration: 'underline',
-                color: '#388e3c',
+                color: 'red',
               },
             }}
             onClick={() => navigate('/forgot-password')}

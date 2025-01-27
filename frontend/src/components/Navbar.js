@@ -17,7 +17,7 @@ function Navbar() {
 
   return (
     <AppBar position="sticky" sx={{
-      background: 'linear-gradient(90deg, #1E88E5, #4CAF50, #00BCD4)',
+      background: 'linear-gradient(90deg,rgb(19, 181, 24),rgb(5, 194, 198),rgb(12, 69, 225))',
       boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
     }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
