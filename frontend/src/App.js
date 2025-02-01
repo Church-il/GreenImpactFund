@@ -9,7 +9,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Stories from './pages/Stories';
 import Organizations from './pages/Organizations';
-import Donations from './pages/Donations';
+import Donations from './components/Donations';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -49,9 +49,9 @@ function AppWithNavbar() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/stories" element={<Stories />} />
-        <Route path="/organizations" element={<Organizations />} />
-        <Route path="/donations" element={<Donations />} />
+        <Route path="/stories" element={<ProtectedRoute><Stories /></ProtectedRoute>} />
+        <Route path="/organizations" element={<ProtectedRoute><Organizations /></ProtectedRoute>} />
+        <Route path="/donations" element={<ProtectedRoute><Donations /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />

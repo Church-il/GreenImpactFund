@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Home, Login, PersonAdd, Dashboard, ExitToApp } from '@mui/icons-material';
+import { Home, Login, PersonAdd, Dashboard, ExitToApp, Favorite, Book } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
 
@@ -16,10 +16,14 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="sticky" sx={{
-      background: 'linear-gradient(90deg,rgb(19, 181, 24),rgb(5, 194, 198),rgb(12, 69, 225))',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-    }}>
+    <AppBar
+      position="sticky"
+      sx={{
+        background: 'linear-gradient(90deg, #0D47A1, #1976D2, #42A5F5)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+        padding: '6px 0',
+      }}
+    >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography
           variant="h5"
@@ -28,8 +32,12 @@ function Navbar() {
             cursor: 'pointer',
             fontWeight: 'bold',
             color: 'white',
-            letterSpacing: '0px',
+            letterSpacing: '1px',
             fontStyle: 'italic',
+            transition: 'color 0.3s ease-in-out',
+            '&:hover': {
+              color: '#ffeb3b',
+            },
           }}
           onClick={() => navigate('/')}
         >
@@ -45,7 +53,7 @@ function Navbar() {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   '&:hover': {
-                    backgroundColor: '#388e3c',
+                    backgroundColor: '#2E7D32',
                     color: '#fff',
                   },
                 }}
@@ -61,7 +69,7 @@ function Navbar() {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   '&:hover': {
-                    backgroundColor: '#388e3c',
+                    backgroundColor: '#2E7D32',
                     color: '#fff',
                   },
                 }}
@@ -80,7 +88,7 @@ function Navbar() {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   '&:hover': {
-                    backgroundColor: '#388e3c',
+                    backgroundColor: '#2E7D32',
                     color: '#fff',
                   },
                 }}
@@ -92,10 +100,42 @@ function Navbar() {
               <Button
                 color="inherit"
                 sx={{
+                  marginRight: 2,
                   fontSize: '16px',
                   fontWeight: 'bold',
                   '&:hover': {
-                    backgroundColor: '#388e3c',
+                    backgroundColor: '#FF5722',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/donations')}
+                startIcon={<Favorite />}
+              >
+                Donations
+              </Button>
+              <Button
+                color="inherit"
+                sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#673AB7',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/stories')}
+                startIcon={<Book />}
+              >
+                Stories
+              </Button>
+              <Button
+                color="inherit"
+                sx={{
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#D32F2F',
                     color: '#fff',
                   },
                 }}
