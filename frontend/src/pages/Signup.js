@@ -20,7 +20,7 @@ const CardContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 100vh;
   background: url('/images/humanrights.jpg') no-repeat center center/cover;
   padding: 24px;
   overflow: hidden;  

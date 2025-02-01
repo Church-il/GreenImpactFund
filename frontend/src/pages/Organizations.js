@@ -1,131 +1,207 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Card, CardContent } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { motion } from 'framer-motion';
+import api from '../utils/api';
 import PageWrapper from '../components/PageWrapper';
-import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+// 🔹 Styled Components for UI
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 2rem;
+`;
+
+const Title = styled.h2`
+  color: #2e7d32;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+`;
+
+const Message = styled.p`
+  color: ${(props) => (props.success ? '#2e7d32' : 'red')};
+  margin-bottom: 1rem;
+`;
+
+const OrgList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+`;
+
+const OrgCard = styled(motion.div)`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const OrgTitle = styled.h4`
+  font-weight: bold;
+  color: #2e7d32;
+`;
+
+const OrgDescription = styled.p`
+  color: #666;
+  margin: 0.5rem 0;
+`;
+
+const Status = styled.p`
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: ${(props) => (props.approved ? '#2e7d32' : '#f57c00')};
+`;
+
+const FormContainer = styled.div`
+  background: white;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+`;
+
+const Button = styled.button`
+  background: ${(props) => (props.danger ? '#d32f2f' : '#2e7d32')};
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  &:hover {
+    background: ${(props) => (props.danger ? '#b71c1c' : '#1b5e20')};
+  }
+`;
 
 function Organizations() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
-  const token = useSelector((state) => state.auth.token); // Get user token
-  const navigate = useNavigate();
+  const [organizations, setOrganizations] = useState([]);
+  const token = useSelector((state) => state.auth.token);
+  const userRole = useSelector((state) => state.auth.user?.role);
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await api.get('/organizations/');
+        setOrganizations(response.data.organizations);
+      } catch (error) {
+        setMessage('Failed to fetch organizations.');
+      }
+    };
+    fetchOrganizations();
+  }, []);
 
   const handleApply = async () => {
     if (!token) {
-      setMessage('You must be logged in to apply.');
+      setMessage('You must be logged in to create an organization.');
       return;
     }
 
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:5000/organizations/apply',
-        { name, description },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setMessage('Application submitted successfully!');
+      const response = await api.post('/organizations/apply', { name, description });
+      setMessage('Organization created successfully!');
+      setName('');
+      setDescription('');
+      
+      // ✅ Immediately reflect in UI
+      setOrganizations([...organizations, { 
+        id: response.data.organization_id,
+        name, 
+        description, 
+        approved: true 
+      }]);
+      
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setMessage('Unauthorized. Please log in again.');
-        navigate('/login');
-      } else {
-        setMessage('Failed to submit application. Please try again.');
-      }
+      setMessage(error.response?.data?.error || 'Failed to create organization.');
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      await api.put(`/organizations/${id}/approve`);
+      setOrganizations((prev) =>
+        prev.map((org) => (org.id === id ? { ...org, approved: true } : org))
+      );
+    } catch (error) {
+      setMessage('Failed to approve organization.');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/organizations/${id}`);
+      setOrganizations((prev) => prev.filter((org) => org.id !== id));
+    } catch (error) {
+      setMessage('Failed to delete organization.');
     }
   };
 
   return (
     <PageWrapper>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #e8f5e9, #e3f2fd)',
-          p: 3,
-        }}
-      >
-        <Card
-          sx={{
-            maxWidth: 500,
-            borderRadius: 4,
-            boxShadow: 5,
-            overflow: 'hidden',
-            width: '100%',
-          }}
-        >
-          <CardContent
-            sx={{
-              p: 4,
-              textAlign: 'center',
-              background: 'linear-gradient(135deg, #a5d6a7, #80deea)',
-            }}
-          >
-            <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#388e3c', mb: 3 }}>
-              Apply as an Organization
-            </Typography>
-            {message && (
-              <Typography
-                color={message.includes('successfully') ? 'primary' : 'error'}
-                sx={{ mb: 2, fontSize: '0.9rem' }}
-              >
-                {message}
-              </Typography>
-            )}
-            <TextField
-              label="Organization Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              fullWidth
-              sx={{
-                mb: 2,
-                borderRadius: '8px',
-                '& .MuiInputBase-root': {
-                  borderRadius: '8px',
-                },
-                backgroundColor: '#ffffff',
-              }}
-            />
-            <TextField
-              label="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              fullWidth
-              sx={{
-                mb: 3,
-                borderRadius: '8px',
-                '& .MuiInputBase-root': {
-                  borderRadius: '8px',
-                },
-                backgroundColor: '#ffffff',
-              }}
-              multiline
-              rows={3}
-            />
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={handleApply}
-              sx={{
-                borderRadius: '20px',
-                padding: '12px',
-                backgroundColor: '#4caf50',
-                color: 'white',
-                fontSize: '1rem',
-                '&:hover': {
-                  backgroundColor: '#388e3c',
-                },
-              }}
-            >
-              Submit Application
-            </Button>
-          </CardContent>
-        </Card>
-      </Box>
+      <Container>
+        <Title>Organizations</Title>
+        {message && <Message success={message.includes('success')}>{message}</Message>}
+
+        <OrgList>
+          {organizations.length > 0 ? (
+            organizations.map((org) => (
+              <OrgCard key={org.id}>
+                <OrgTitle>{org.name}</OrgTitle>
+                <OrgDescription>{org.description}</OrgDescription>
+                <Status approved={org.approved}>
+                  {org.approved ? 'Approved' : 'Pending Approval'}
+                </Status>
+
+                {userRole === 'admin' && !org.approved && (
+                  <Button onClick={() => handleApprove(org.id)}>Approve</Button>
+                )}
+
+                {userRole === 'admin' && (
+                  <Button danger onClick={() => handleDelete(org.id)}>Delete</Button>
+                )}
+              </OrgCard>
+            ))
+          ) : (
+            <Message>No organizations found.</Message>
+          )}
+        </OrgList>
+
+        <FormContainer>
+          <Title>Create an Organization</Title>
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Organization Name"
+          />
+          <Input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Organization Description"
+          />
+          <Button onClick={handleApply}>Apply</Button>
+        </FormContainer>
+      </Container>
     </PageWrapper>
   );
 }
