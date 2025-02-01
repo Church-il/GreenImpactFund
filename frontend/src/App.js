@@ -11,6 +11,7 @@ import Stories from './pages/Stories';
 import Organizations from './pages/Organizations';
 import Donations from './components/Donations';
 import Profile from './pages/Profile';
+import SettingsDashboard from './pages/SettingsDashboard';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import { createGlobalStyle } from 'styled-components';
@@ -53,6 +54,7 @@ function AppWithNavbar() {
         <Route path="/organizations" element={<ProtectedRoute><Organizations /></ProtectedRoute>} />
         <Route path="/donations" element={<ProtectedRoute><Donations /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><SettingsDashboard /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
