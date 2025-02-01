@@ -6,7 +6,6 @@ from datetime import datetime
 
 stories_bp = Blueprint('stories', __name__)
 
-# Create a story for an organization
 @stories_bp.route('/<int:organization_id>', methods=['POST'])
 @jwt_required()
 def create_story(organization_id):
@@ -38,13 +37,12 @@ def create_story(organization_id):
 
     return jsonify({"message": "Story created successfully"}), 201
 
-# List all stories for an organization
-@stories_bp.route('/<int:organization_id>', methods=['GET'])
+@stories_bp.route('/organization/<int:organization_id>/stories', methods=['GET'])
 @jwt_required()
 def list_stories(organization_id):
     organization = Organization.query.get(organization_id)
-    if not organization:
-        return jsonify({"error": "Organization not found"}), 404
+    if not organization or not organization.approved:
+        return jsonify({"error": "Organization not found or not approved"}), 404
 
     stories = Story.query.filter_by(organization_id=organization_id).all()
     return jsonify({"stories": [
@@ -56,7 +54,6 @@ def list_stories(organization_id):
         } for story in stories
     ]}), 200
 
-# Delete a story (Admin only)
 @stories_bp.route('/<int:story_id>', methods=['DELETE'])
 @jwt_required()
 def delete_story(story_id):
