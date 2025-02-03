@@ -91,7 +91,7 @@ const StyledTextField = styled(TextField)`
 
   .MuiInputLabel-root {
     color: #606770;
-    transition: all 0.3s ease-in-out; /* Smooth transition */
+    transition: all 0.3s ease-in-out;
 
     &.Mui-focused {
       color: #1877f2;
@@ -102,7 +102,6 @@ const StyledTextField = styled(TextField)`
     margin-right: 8px;
   }
 `;
-
 
 const Divider = styled.div`
   display: flex;
@@ -180,7 +179,8 @@ function Signup() {
     }
 
     try {
-      await axios.post('http://127.0.0.1:5000/auth/signup', formData);
+      const apiUrl = process.env.REACT_APP_API_URL;
+      await axios.post(`${apiUrl}/auth/signup`, formData);
       setMessage('Account Created Successfully!');
       setError('');
       setTimeout(() => navigate('/login'), 1000);
