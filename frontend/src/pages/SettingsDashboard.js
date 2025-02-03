@@ -155,7 +155,7 @@ const SettingsDashboard = ({ currentUser }) => {
               borderRadius: 4,
               background: settings.preferences.darkMode 
                 ? 'linear-gradient(145deg, rgba(21,21,21,0.95) 0%, rgba(40,40,40,0.95) 100%)'
-                : 'linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(245,245,245,0.95) 100%)',
+                : 'linear-gradient(145deg, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0.95) 100%)',
               boxShadow: 3,
               backdropFilter: 'blur(20px)',
               border: settings.preferences.darkMode 
