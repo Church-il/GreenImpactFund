@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Box, Grid, Card, CardContent, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import PageWrapper from '../components/PageWrapper';
+import api from '../utils/api';
 
 const StyledCard = styled(Card)`
   box-shadow: 3;
@@ -24,7 +24,7 @@ function Stories({ organizationId }) {
       if (!organizationId) return;
 
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/organization/${organizationId}/stories`);
+        const response = await api.get(`/organization/${organizationId}/stories`);
         setStories(response.data.stories);
       } catch (error) {
         console.error('Error fetching stories:', error);

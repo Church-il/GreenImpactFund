@@ -9,8 +9,13 @@ const Container = styled.div`
   height: 85vh;
   background-color: white;
   text-align: center;
-  padding-top: 10vh;  
+  padding-top: 10vh;
   padding: 2rem 3rem;
+  @media (max-width: 600px) {
+    height: auto;
+    padding: 1rem;
+    padding-top: 5vh;
+  }
 `;
 
 const Title = styled.h1`
@@ -18,19 +23,19 @@ const Title = styled.h1`
   margin-bottom: 1rem;
   font-family: 'Arial', sans-serif;
   font-weight: bold;
-  color: rgb(255, 1, 1);
+  color: var(--error-color, rgb(255, 1, 1));
 `;
 
 const Message = styled.p`
   font-size: 1.2rem;
   margin-bottom: 2rem;
-  color: rgb(255, 1, 1);
+  color: var(--error-color, rgb(255, 1, 1));
 `;
 
 const StyledLink = styled(Link)`
   display: inline-block;
   padding: 12px 24px;
-  background: #2e7d32;
+  background: var(--primary-color, #2e7d32);
   color: white;
   font-weight: bold;
   text-decoration: none;
@@ -39,13 +44,13 @@ const StyledLink = styled(Link)`
   font-size: 1rem;
 
   &:hover {
-    background: #1b5e20;
+    background: var(--hover-color, #1b5e20);
   }
 `;
 
 function NotFound() {
   return (
-    <Container>
+    <Container role="alert">
       <div>
         <Title>404 - Page Not Found</Title>
         <Message>Oops! The page you're looking for doesn't exist.</Message>

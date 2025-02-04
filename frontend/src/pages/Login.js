@@ -12,6 +12,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -42,7 +43,7 @@ const StyledCard = styled(Card)`
   width: 100%;
   background: linear-gradient(135deg, #ffffff, #f9f9f9);
   padding: 1.5rem 2rem;
-  border-radius: 16px; /* Reduced rounding */
+  border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
   display: flex;
@@ -63,11 +64,10 @@ const StyledCardContent = styled(CardContent)`
   gap: 16px;
 `;
 
-
 const StyledButton = styled(Button)`
   width: 100%;
   padding: 10px;
-  border-radius: 20px; /* Adjusted rounding */
+  border-radius: 20px;
   background-color: #4caf50;
   color: white;
   font-size: 1rem;
@@ -85,7 +85,7 @@ const StyledTextField = styled(TextField)`
   margin-bottom: 16px;
   width: 100%;
   .MuiOutlinedInput-root {
-    border-radius: 8px; /* Reduced rounding */
+    border-radius: 8px;
     &:hover {
       border-color: #1e88e5;
     }
@@ -132,7 +132,7 @@ function Login() {
     }
     try {
       setLoading(true);
-      const response = await axios.post('http://127.0.0.1:5000/auth/login', {
+      const response = await api.post('/auth/login', {
         email,
         password,
       });

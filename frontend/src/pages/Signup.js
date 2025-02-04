@@ -1,3 +1,4 @@
+import api from '../utils/api';
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Card, CardContent, IconButton } from '@mui/material';
 import axios from 'axios';
@@ -179,8 +180,7 @@ function Signup() {
     }
 
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
-      await axios.post(`${apiUrl}/auth/signup`, formData);
+      await api.post('/auth/signup', formData); // imported API instance
       setMessage('Account Created Successfully!');
       setError('');
       setTimeout(() => navigate('/login'), 1000);

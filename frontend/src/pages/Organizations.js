@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import api from '../utils/api';
 import PageWrapper from '../components/PageWrapper';
 import styled from 'styled-components';
 
-// 🔹 Styled Components for UI
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -121,15 +121,12 @@ function Organizations() {
       setMessage('Organization created successfully!');
       setName('');
       setDescription('');
-      
-      // ✅ Immediately reflect in UI
       setOrganizations([...organizations, { 
         id: response.data.organization_id,
         name, 
         description, 
         approved: true 
       }]);
-      
     } catch (error) {
       setMessage(error.response?.data?.error || 'Failed to create organization.');
     }
@@ -154,7 +151,6 @@ function Organizations() {
       setMessage('Failed to delete organization.');
     }
   };
-
   return (
     <PageWrapper>
       <Container>

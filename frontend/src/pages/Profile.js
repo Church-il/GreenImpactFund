@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../utils/api'; 
 import React, { useState } from 'react';
 import {
   TextField, Button, Typography, Container, Grid, IconButton,
@@ -68,7 +68,7 @@ const Profile = () => {
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
-      await axios.put('/api/user/profile', user);
+      await api.put('/api/user/profile', user); //api instance
       setSaveStatus({ success: true, message: 'Changes saved successfully!' });
       setTimeout(() => setSaveStatus({ success: null, message: '' }), 3000);
     } catch (error) {
@@ -80,7 +80,7 @@ const Profile = () => {
   };
 
   const handleExportData = async () => {
-    const response = await axios.get('/api/user/export');
+    const response = await api.get('/api/user/export'); //api instance
     const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -106,12 +106,12 @@ const Profile = () => {
             boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
             border: '1px solid rgba(255, 255, 255, 0.2)'
           }}>
-            <Box sx={{ textAlign: 'center', mb: 3 }}>
+                        <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Avatar sx={{
                 width: 80,
                 height: 80,
                 mb: 2,
-                border: `2px solid ${user.themeColor}`,
+                border: 2px solid ${user.themeColor},
                 background: 'linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)'
               }}/>
               <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { AccountCircle, Favorite, History, Settings, Home } from '@mui/icons-material';
+import { AccountCircle, Favorite, History, Settings } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+
+const API_URL = process.env.REACT_APP_ENV === 'production'
+  ? process.env.REACT_APP_API_URL_PROD
+  : process.env.REACT_APP_API_URL_DEV;
 
 const DashboardWrapper = styled.div`
   padding: 3rem;
@@ -20,7 +24,7 @@ const Heading = styled.h1`
   font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
-  color:rgb(9, 26, 110);
+  color: rgb(9, 26, 110);
   letter-spacing: 1px;
   font-size: 2.5rem;
 `;
@@ -59,15 +63,11 @@ const FeatureCard = styled.div`
 const CardContent = styled.div`
   padding: 2rem;
   text-align: center;
-  position: relative;
-  z-index: 1;
 `;
 
 const CardIcon = styled.div`
   font-size: 50px;
-  color: ${(props) => props.color || '#42a5f5'};
   margin-bottom: 1.5rem;
-  transition: color 0.3s ease;
 `;
 
 const CardTitle = styled.h3`
@@ -117,7 +117,7 @@ const HomeButton = styled(Link)`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background-color:rgb(226, 7, 7);
+    background-color: rgb(226, 7, 7);
     transform: translateY(-3px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   }
@@ -134,25 +134,25 @@ const Dashboard = () => {
     {
       title: 'Manage Profile',
       description: 'Update your personal details and preferences to tailor your experience.',
-      icon: <AccountCircle sx={{ fontSize: 50, color: '#42a5f5' }} />,
+      icon: <AccountCircle style={{ fontSize: 50, color: '#42a5f5' }} />,
       link: '/profile',
     },
     {
       title: 'Your Donations',
       description: 'View, manage, and track your donations and their impact.',
-      icon: <Favorite sx={{ fontSize: 50, color: '#ef5350' }} />,
+      icon: <Favorite style={{ fontSize: 50, color: '#ef5350' }} />,
       link: '/donations',
     },
     {
       title: 'Donation History',
       description: 'Review past donations and manage your receipts for tax purposes.',
-      icon: <History sx={{ fontSize: 50, color: '#66bb6a' }} />,
+      icon: <History style={{ fontSize: 50, color: '#66bb6a' }} />,
       link: '/history',
     },
     {
       title: 'Settings',
       description: 'Customize your account preferences for a better experience.',
-      icon: <Settings sx={{ fontSize: 50, color: '#ffa726' }} />,
+      icon: <Settings style={{ fontSize: 50, color: '#ffa726' }} />,
       link: '/settings',
     },
   ];
@@ -168,7 +168,7 @@ const Dashboard = () => {
         {features.map((feature, index) => (
           <FeatureCard key={index}>
             <CardContent>
-              <CardIcon color={feature.icon.props.color}>{feature.icon}</CardIcon>
+              <CardIcon>{feature.icon}</CardIcon>
               <CardTitle>{feature.title}</CardTitle>
               <CardDescription>{feature.description}</CardDescription>
               <ExploreButton to={feature.link}>Explore</ExploreButton>

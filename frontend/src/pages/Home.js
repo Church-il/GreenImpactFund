@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/PageWrapper';
 import styled from 'styled-components';
 
+const API_URL = process.env.REACT_APP_ENV === 'production'
+  ? process.env.REACT_APP_API_URL_PROD
+  : process.env.REACT_APP_API_URL_DEV;
+
 const HeroSection = styled.div`
   text-align: center;
   padding: 60px 20px;
@@ -124,18 +128,18 @@ const DonateButton = styled.button`
   }
 `;
 
-function Home() {
+const Home = () => {
   const [organizations, setOrganizations] = useState([]);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate('/login', { replace: true });
     } else {
       async function fetchOrganizations() {
         try {
-          const response = await axios.get('http://127.0.0.1:5000/organizations');
+          const response = await axios.get(`${API_URL}/organizations`);
           setOrganizations(response.data.organizations);
         } catch (error) {
           console.error('Error fetching organizations:', error);
@@ -149,6 +153,7 @@ function Home() {
     return null;
   }
 
+  
   return (
     <PageWrapper>
       <HeroSection>

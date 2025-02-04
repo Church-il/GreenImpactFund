@@ -1,3 +1,4 @@
+import api from '../utils/api;'
 import React, { useState } from 'react';
 import {
   Box, Container, Grid, Typography, TextField, Button,
@@ -71,14 +72,14 @@ const SettingsDashboard = ({ currentUser }) => {
 
   const handleSaveSettings = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await api.put('/api/user/settings', settings);
       setFeedback({ type: 'success', message: 'Settings saved successfully!' });
       setEditMode(false);
     } catch (error) {
       setFeedback({ type: 'error', message: 'Failed to save settings' });
     }
   };
-
+  
   return (
     <Container maxWidth="xl" sx={{ 
       py: 4,
@@ -388,43 +389,43 @@ const SettingsDashboard = ({ currentUser }) => {
 
               {/* Action Bar */}
               <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button
-    variant="contained"
-    onClick={handleSaveSettings}
-    startIcon={<Save />}
-    disabled={!editMode}
-    sx={{
-      backgroundColor: '#4CAF50', 
-      borderRadius: 2,
-      px: 5,
-      py: 2,
-      fontWeight: 600,
-      fontSize: '16px',
-      letterSpacing: '1px',
-      textTransform: 'none',
-      border: '2px solid #388E3C',
-      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-      '&:hover': {
-        backgroundColor: '#388E3C',  
-        transform: 'translateY(-2px)',
-        boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
-        border: '2px solid #1B5E20', 
-      },
-      '&:active': {
-        transform: 'translateY(1px)',
-        boxShadow: 'none',
-        border: '2px solid #1B5E20',  
-      },
-      '&:disabled': {
-        backgroundColor: '#A5D6A7',  
-        boxShadow: 'none',
-        cursor: 'not-allowed',
-        border: '2px solid #81C784',  
-      }
-    }}
-  >
-    Save Settings
-  </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleSaveSettings}
+                  startIcon={<Save />}
+                  disabled={!editMode}
+                  sx={{
+                    backgroundColor: '#4CAF50', 
+                    borderRadius: 2,
+                    px: 5,
+                    py: 2,
+                    fontWeight: 600,
+                    fontSize: '16px',
+                    letterSpacing: '1px',
+                    textTransform: 'none',
+                    border: '2px solid #388E3C',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                    '&:hover': {
+                      backgroundColor: '#388E3C',  
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
+                      border: '2px solid #1B5E20', 
+                    },
+                    '&:active': {
+                      transform: 'translateY(1px)',
+                      boxShadow: 'none',
+                      border: '2px solid #1B5E20',  
+                    },
+                    '&:disabled': {
+                      backgroundColor: '#A5D6A7',  
+                      boxShadow: 'none',
+                      cursor: 'not-allowed',
+                      border: '2px solid #81C784',  
+                    }
+                  }}
+                >
+                  Save Settings
+                </Button>
                 <Button
                   variant="outlined"
                   onClick={() => setEditMode(!editMode)}
