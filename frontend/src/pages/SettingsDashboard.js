@@ -1,4 +1,4 @@
-import api from '../utils/api;'
+import api from '../utils/api';
 import React, { useState } from 'react';
 import {
   Box, Container, Grid, Typography, TextField, Button,
