@@ -111,7 +111,7 @@ const Profile = () => {
                 width: 80,
                 height: 80,
                 mb: 2,
-                border: 2px solid ${user.themeColor},
+                border: `2px solid ${user.themeColor}`,
                 background: 'linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)'
               }}/>
               <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
