@@ -180,7 +180,7 @@ function Signup() {
     }
 
     try {
-      await api.post('/auth/signup', formData); // imported API instance
+      await api.post('https://greenimpactfund.onrender.com/auth/signup', formData); // imported API instance
       setMessage('Account Created Successfully!');
       setError('');
       setTimeout(() => navigate('/login'), 1000);
