@@ -183,7 +183,7 @@ function Signup() {
       await api.post('/auth/signup', formData);
       setMessage('Account Created Successfully!');
       setError('');
-      setTimeout(() => navigate('/login'), 1000);
+      setTimeout(() => navigate('/login'), 750);
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');
       setMessage('');
