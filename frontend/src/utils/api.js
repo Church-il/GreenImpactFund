@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASE_URL =
   process.env.REACT_APP_ENV === 'production'
     ? process.env.REACT_APP_API_URL_PROD || 'https://greenimpactfund.onrender.com'
-    : process.env.REACT_APP_API_URL_DEV || 'http://127.0.0.1:5000';
+    : process.env.REACT_APP_API_URL_DEV || 'https://greenimpactfund.onrender.com';
 
 if (process.env.REACT_APP_ENV !== 'production') {
   console.log('Base URL:', BASE_URL);
