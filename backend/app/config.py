@@ -3,7 +3,11 @@ from datetime import timedelta
 
 class Config:
     # Database Configuration
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://mazingira_user:password123@localhost:5432/mazingira')
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        'DATABASE_URL', 
+        'postgresql://greenimpactfunduser:6TXgeaQMu5koIC1P0SpXRbNsD48D00lD@dpg-cuk7c70gph6c73bo7h20-a.oregon-postgres.render.com/greenimpactfund'
+    ).replace("postgres://", "postgresql://") 
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # JWT Configuration
