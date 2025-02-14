@@ -1,8 +1,13 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_ENV === 'production'
-  ? process.env.REACT_APP_API_URL_PROD
-  : process.env.REACT_APP_API_URL_DEV;
+const BASE_URL =
+  process.env.REACT_APP_ENV === 'production'
+    ? process.env.REACT_APP_API_URL_PROD || 'https://greenimpactfund.onrender.com'
+    : process.env.REACT_APP_API_URL_DEV || 'http://127.0.0.1:5000';
+
+if (process.env.REACT_APP_ENV !== 'production') {
+  console.log('Base URL:', BASE_URL);
+}
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -10,8 +15,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-console.log('Base URL:', BASE_URL);
 
 api.interceptors.request.use(
   (config) => {
@@ -29,19 +32,19 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const { data } = await axios.post(`${BASE_URL}/auth/refresh-token`, { refreshToken });
-          const { accessToken } = data;
-          localStorage.setItem('token', accessToken);
-          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-          return api(originalRequest);
-        }
+        if (!refreshToken) throw new Error('No refresh token found');
+
+        const { data } = await axios.post(`${BASE_URL}/auth/refresh-token`, { refreshToken });
+        localStorage.setItem('token', data.accessToken);
+
+        originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+        return api(originalRequest);
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
+        console.error('Token refresh failed:', refreshError.message);
         localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
         if (window.location.pathname !== '/login') {
@@ -50,9 +53,7 @@ api.interceptors.response.use(
       }
     }
 
-    if (error.response) {
-      console.error('API error:', error.response.data?.message || error.message);
-    }
+    console.error('API error:', error.response?.data?.message || error.message);
     return Promise.reject(error);
   }
 );
