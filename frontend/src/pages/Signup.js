@@ -164,7 +164,7 @@ function Signup() {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value.trim()
+      [name]: value.trim(),
     }));
   };
 
@@ -180,7 +180,7 @@ function Signup() {
     }
 
     try {
-      await api.post('https://greenimpactfund.onrender.com/auth/signup', formData); // imported API instance
+      await api.post('/auth/signup', formData);
       setMessage('Account Created Successfully!');
       setError('');
       setTimeout(() => navigate('/login'), 1000);
@@ -190,9 +190,7 @@ function Signup() {
     }
   };
 
-  const isValidEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
