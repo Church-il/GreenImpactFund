@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Card, CardContent, Typography, CardMedia, CircularProgress, Container } from '@mui/material';
+import { Grid, Card, CardContent, Typography, CardMedia, CircularProgress, Container, TextField, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import PageWrapper from '../components/PageWrapper';
@@ -25,7 +25,10 @@ const StoryImage = styled(CardMedia)`
 function Stories() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [image, setImage] = useState(null);
+  
   useEffect(() => {
     async function fetchStories() {
       try {
@@ -37,9 +40,32 @@ function Stories() {
         setLoading(false);
       }
     }
-
     fetchStories();
   }, []);
+
+  const handleImageChange = (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    if (image) formData.append('image', image);
+
+    try {
+      const response = await api.post('/stories', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setStories([response.data.story, ...stories]);
+      setTitle('');
+      setContent('');
+      setImage(null);
+    } catch (error) {
+      console.error('Error creating story:', error);
+    }
+  };
 
   return (
     <PageWrapper>
@@ -47,6 +73,14 @@ function Stories() {
         <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#2E7D32', textAlign: 'center', mb: 4 }}>
           Inspiring Impact Stories
         </Typography>
+
+        <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
+          <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required fullWidth sx={{ mb: 2 }} />
+          <TextField label="Content" value={content} onChange={(e) => setContent(e.target.value)} required multiline rows={4} fullWidth sx={{ mb: 2 }} />
+          <input type="file" accept="image/*" onChange={handleImageChange} style={{ marginBottom: '1rem' }} />
+          <Button type="submit" variant="contained" color="primary">Create Story</Button>
+        </form>
+
         {loading ? (
           <Grid container justifyContent="center">
             <CircularProgress />
