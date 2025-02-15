@@ -15,13 +15,17 @@ def create_story():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    data = request.get_json()
-    title = data.get('title')
-    content = data.get('content')
-    image_url = data.get('imageUrl')
+    title = request.form.get('title')
+    content = request.form.get('content')
+    image = request.files.get('image')
 
     if not title or not content:
         return jsonify({"error": "Title and content are required"}), 400
+
+    image_url = None
+    if image:
+        upload_result = cloudinary.uploader.upload(image)
+        image_url = upload_result.get("secure_url")
 
     story = Story(
         title=title,
@@ -32,13 +36,16 @@ def create_story():
     db.session.add(story)
     db.session.commit()
 
-    return jsonify({"message": "Story created successfully", "story": {
-        "id": story.id,
-        "title": story.title,
-        "content": story.content,
-        "imageUrl": story.image_url,
-        "date_posted": story.date_posted
-    }}), 201
+    return jsonify({
+        "message": "Story created successfully",
+        "story": {
+            "id": story.id,
+            "title": story.title,
+            "content": story.content,
+            "imageUrl": story.image_url,
+            "date_posted": story.date_posted
+        }
+    }), 201
 
 @stories_bp.route('/stories', methods=['GET'])
 def list_stories():
