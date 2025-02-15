@@ -11,7 +11,7 @@ jwt = JWTManager()
 migrate = Migrate()
 
 cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+    cloud_name=os.getenv("dcltyrxr9"),
+    api_key=os.getenv("449717595926682"),
+    api_secret=os.getenv("zG_3EzQ-Rc73HY7k2wrHWaODEzE")
 )

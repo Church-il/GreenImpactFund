@@ -4,9 +4,9 @@ import cloudinary
 import cloudinary.uploader
 
 cloudinary.config(
-    cloud_name="your_cloud_name",
-    api_key="your_api_key",
-    api_secret="your_api_secret"
+    cloud_name="dcltyrxr9",
+    api_key="449717595926682",
+    api_secret="zG_3EzQ-Rc73HY7k2wrHWaODEzE"
 )
 
 class Config:
