@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: greenimpactfund
+    env: python
+    buildCommand: |
+
+      # Install system dependencies
+      sudo apt-get update -y
+      sudo apt-get install -y libgirepository1.0-dev
+      # Run your build script
+      ./render-build.sh
+      
+    startCommand: poetry run python app.py  # Adjust this to your actual start command
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: POETRY_VERSION
+        value: 1.7.1
