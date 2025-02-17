@@ -547,19 +547,8 @@ const stories = [
       { label: 'Emissions Reduced', value: '18kt/yr', color: '#c8e6c9' }
     ]
   },
+  
   {
-  id: 21,
-  title: 'Community Irrigation in Kisii',
-  img: 'https://images.unsplash.com/photo-1586773860418-d37222d8fbe3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aXJyaWdhdGlvbiUyMHN5c3RlbSUyMGtlbnlhfGVufDB8fDB8fHww',
-  desc: 'Sustainable irrigation systems supporting 5,000 smallholder farmers.',
-  extendedDesc: `A network of 15 community-managed irrigation schemes now waters 1,200 hectares of farmland in Kisii. The project trained 800 farmers in water conservation techniques, increasing crop yields by 65% and providing year-round water access through rainwater harvesting reservoirs.`,
-  stats: [
-    { label: 'Farmers Trained', value: '5,000', color: '#e0f7fa' },
-    { label: 'Land Irrigated', value: '1,200ha', color: '#fff9c4' },
-    { label: 'Yield Increase', value: '65%', color: '#c8e6c9' }
-  ]
-},
-{
   id: 21,
   title: 'Community Irrigation in Kisii',
   img: 'https://www.davisinstruments.com/cdn/shop/articles/iStock_000019952631_Large-scaled-1_1200x800.jpg?v=1693260107',
