@@ -35,7 +35,13 @@ const profileSchema = yup.object().shape({
 });
 
 const Profile = () => {
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+  const { 
+    control, 
+    handleSubmit, 
+    formState: { errors }, 
+    reset,
+    watch
+  } = useForm({
     resolver: yupResolver(profileSchema)
   });
   
@@ -49,6 +55,7 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [twoFactorStep, setTwoFactorStep] = useState(0);
   const [verificationCode, setVerificationCode] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,6 +134,36 @@ const Profile = () => {
       toast.success('Two-factor authentication enabled');
     } catch (error) {
       toast.error('Invalid verification code');
+    }
+  };
+
+  const handleSectionToggle = (section) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
+  const handleExportData = async () => {
+    try {
+      const response = await api.get('/api/user/export');
+      const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'user-data.json';
+      a.click();
+      toast.success('Data exported successfully');
+    } catch (error) {
+      toast.error('Failed to export data');
+    }
+  };
+
+  const handleAccountDelete = async () => {
+    try {
+      await api.delete('/api/user');
+      localStorage.clear();
+      navigate('/login');
+      toast.success('Account deleted successfully');
+    } catch (error) {
+      toast.error('Account deletion failed');
     }
   };
 
