@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/PageWrapper';
@@ -8,13 +8,16 @@ const ImpactContainer = styled.div`
   margin: auto;
   padding: 40px 20px;
   text-align: center;
+  background: linear-gradient(135deg, #f4f4f9, #e4e4f1);
+  border-radius: 15px;
 `;
 
 const Title = styled.h2`
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   font-weight: bold;
   color: #2e7d32;
   margin-bottom: 20px;
+  letter-spacing: 1px;
 `;
 
 const Subtitle = styled.p`
@@ -23,24 +26,29 @@ const Subtitle = styled.p`
   margin: 0 auto 40px;
   color: #555;
   line-height: 1.8;
+  text-align: center;
 `;
 
 const StoriesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 30px;
+  transition: all 0.3s ease;
 `;
 
 const StoryCard = styled.div`
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s ease-out;
+  cursor: pointer;
   &:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+  &:active {
+    transform: scale(0.98);
   }
 `;
 
@@ -48,22 +56,98 @@ const StoryImage = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
+  transition: all 0.3s ease-in-out;
+  border-radius: 12px 12px 0 0;
 `;
 
 const StoryContent = styled.div`
   padding: 20px;
+  transition: all 0.3s ease-in-out;
+  background-color: #f8f8f8;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const StoryTitle = styled.h4`
   color: #2e7d32;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin-bottom: 10px;
+  transition: color 0.3s ease-in-out;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
 `;
 
 const StoryDescription = styled.p`
   color: #666;
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.6;
+  text-align: justify;
+`;
+
+const StoryExpandButton = styled.button`
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-top: 20px;
+  &:hover {
+    background-color: #1b5e20;
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: ${({ show }) => (show ? 'block' : 'none')};
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 40px;
+  max-width: 600px;
+  max-height: 80%;
+  overflow-y: auto;
+  border-radius: 12px;
+  position: relative;
+`;
+
+const ModalTitle = styled.h3`
+  color: #2e7d32;
+  font-size: 2rem;
+  margin-bottom: 15px;
+`;
+
+const ModalDescription = styled.p`
+  color: #444;
+  font-size: 1.1rem;
+  line-height: 1.6;
+`;
+
+const CloseModalButton = styled.button`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: #2e7d32;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  &:hover {
+    color: #1b5e20;
+  }
 `;
 
 const stories = [
@@ -90,7 +174,16 @@ const stories = [
 ];
 
 const DonationImpact = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({});
   const navigate = useNavigate();
+
+  const handleExpandStory = (story) => {
+    setModalContent(story);
+    setShowModal(true);
+  };
+
+  const closeModal = () => setShowModal(false);
 
   return (
     <PageWrapper>
@@ -101,16 +194,24 @@ const DonationImpact = () => {
         </Subtitle>
         <StoriesGrid>
           {stories.map((story) => (
-            <StoryCard key={story.id}>
+            <StoryCard key={story.id} onClick={() => handleExpandStory(story)}>
               <StoryImage src={story.img} alt={story.title} />
               <StoryContent>
                 <StoryTitle>{story.title}</StoryTitle>
                 <StoryDescription>{story.desc}</StoryDescription>
+                <StoryExpandButton>Read More</StoryExpandButton>
               </StoryContent>
             </StoryCard>
           ))}
         </StoriesGrid>
       </ImpactContainer>
+      <ModalOverlay show={showModal}>
+        <ModalContent>
+          <CloseModalButton onClick={closeModal}>×</CloseModalButton>
+          <ModalTitle>{modalContent.title}</ModalTitle>
+          <ModalDescription>{modalContent.desc}</ModalDescription>
+        </ModalContent>
+      </ModalOverlay>
     </PageWrapper>
   );
 };
