@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Home, Login, PersonAdd, Dashboard, ExitToApp, Favorite, Book } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
+import { AttachMoney } from '@mui/icons-material';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -127,7 +128,7 @@ function Navbar() {
                   },
                 }}
                 onClick={() => navigate('/donations')}
-                startIcon={<Favorite />}
+                startIcon={<AttachMoney />}
               >
                 Donations
               </Button>
@@ -148,7 +149,7 @@ function Navbar() {
               >
                 Stories
               </Button>
-              
+
               <Button
                 color="inherit"
                 sx={{
