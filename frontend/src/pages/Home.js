@@ -6,20 +6,8 @@ import PageWrapper from '../components/PageWrapper';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '@mui/material/Skeleton';
-import { Button } from '@mui/material';
-import { 
-  Grid, 
-  TextField, 
-  Chip, 
-  IconButton, 
-  Alert, 
-  Snackbar, 
-  Select, 
-  MenuItem, 
-  FormControl, 
-  InputLabel 
-} from '@mui/material';
-import { Search, FilterList, Favorite } from '@mui/icons-material';
+import { Grid, Chip, IconButton } from '@mui/material';
+import { Favorite, Share, ArrowForward } from '@mui/icons-material';
 
 const API_URL = process.env.REACT_APP_ENV === 'production'
   ? process.env.REACT_APP_API_URL_PROD
@@ -47,7 +35,7 @@ const HeroSection = styled.section`
   }
 `;
 
-const Title = styled(motion.h1)`
+const AnimatedTitle = styled(motion.h1)`
   font-weight: 800;
   margin-bottom: 20px;
   font-size: 2.8rem;
@@ -63,13 +51,10 @@ const SubText = styled(motion.p)`
   opacity: 0.9;
 `;
 
-const ControlBar = styled.div`
-  display: flex;
-  gap: 20px;
-  margin: 40px auto;
-  max-width: 1200px;
+const SectionHeader = styled.div`
+  text-align: center;
+  margin-bottom: 40px;
   padding: 0 20px;
-  flex-wrap: wrap;
 `;
 
 const OrganizationCard = styled(motion.div)`
@@ -134,24 +119,17 @@ const OrgDescription = styled.p`
   line-height: 1.6;
 `;
 
-const CategoryChip = styled(Chip)`
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 1;
-  font-weight: 600;
-  background: rgba(255,255,255,0.9);
+const ActionBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
 `;
 
 const Home = () => {
   const [organizations, setOrganizations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterCategory, setFilterCategory] = useState('all');
-  const [categories, setCategories] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const [favorites, setFavorites] = useState(new Set());
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
@@ -162,16 +140,10 @@ const Home = () => {
       return;
     }
 
-    const fetchData = async () => {
+    const fetchOrganizations = async () => {
       try {
-        const [orgsResponse, catsResponse] = await Promise.all([
-          axios.get(`${API_URL}/organizations?page=${page}`),
-          axios.get(`${API_URL}/categories`)
-        ]);
-        
-        setOrganizations(prev => [...prev, ...orgsResponse.data.organizations]);
-        setCategories(catsResponse.data.categories);
-        setHasMore(orgsResponse.data.hasMore);
+        const response = await axios.get(`${API_URL}/organizations`);
+        setOrganizations(response.data.organizations);
         setError(null);
       } catch (err) {
         setError('Failed to load organizations. Please try again later.');
@@ -180,16 +152,8 @@ const Home = () => {
       }
     };
 
-    fetchData();
-  }, [isAuthenticated, navigate, page]);
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value.toLowerCase());
-  };
-
-  const handleCategoryFilter = (category) => {
-    setFilterCategory(category);
-  };
+    fetchOrganizations();
+  }, [isAuthenticated, navigate]);
 
   const toggleFavorite = (orgId) => {
     setFavorites(prev => {
@@ -199,25 +163,18 @@ const Home = () => {
     });
   };
 
-  const filteredOrganizations = organizations.filter(org => {
-    const matchesSearch = org.name.toLowerCase().includes(searchQuery) ||
-      org.description.toLowerCase().includes(searchQuery);
-    const matchesCategory = filterCategory === 'all' || org.category === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
-
   if (!isAuthenticated) return null;
 
   return (
     <PageWrapper>
       <HeroSection>
-        <Title
+        <AnimatedTitle
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           Collective Action for a Greener Future
-        </Title>
+        </AnimatedTitle>
         <SubText
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -229,40 +186,16 @@ const Home = () => {
         </SubText>
       </HeroSection>
 
-      <ControlBar>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Search organizations..."
-          InputProps={{
-            startAdornment: <Search sx={{ color: 'action.active', mr: 1 }} />
-          }}
-          onChange={handleSearch}
-          sx={{ flex: 1 }}
-        />
-        
-        <FormControl sx={{ minWidth: 180 }}>
-          <InputLabel>Filter by Category</InputLabel>
-          <Select
-            value={filterCategory}
-            onChange={(e) => handleCategoryFilter(e.target.value)}
-            label="Filter by Category"
-          >
-            <MenuItem value="all">All Categories</MenuItem>
-            {categories.map(cat => (
-              <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </ControlBar>
+      <SectionHeader>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+          Featured Environmental Organizations
+        </h2>
+        <p style={{ maxWidth: '800px', margin: '0 auto', color: '#616161' }}>
+          Discover and support organizations making tangible impacts across key sustainability areas
+        </p>
+      </SectionHeader>
 
-      {error && (
-        <Alert severity="error" sx={{ maxWidth: 1200, margin: '0 auto 40px' }}>
-          {error}
-        </Alert>
-      )}
-
-      <Grid container spacing={3} sx={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px' }}>
+      <Grid container spacing={3} sx={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
         <AnimatePresence>
           {isLoading ? (
             Array(6).fill().map((_, i) => (
@@ -272,8 +205,14 @@ const Home = () => {
                 <Skeleton variant="text" width="60%" />
               </Grid>
             ))
+          ) : error ? (
+            <Grid item xs={12}>
+              <div style={{ textAlign: 'center', color: '#d32f2f', padding: '20px' }}>
+                {error}
+              </div>
+            </Grid>
           ) : (
-            filteredOrganizations.map((org) => (
+            organizations.map((org) => (
               <Grid item xs={12} sm={6} md={4} key={org.id}>
                 <OrganizationCard
                   initial={{ opacity: 0, y: 20 }}
@@ -283,9 +222,19 @@ const Home = () => {
                 >
                   <OrganizationImage bg={org.image ? 'none' : '#e8f5e9'}>
                     {org.image && <img src={org.image} alt={org.name} loading="lazy" />}
-                    <CategoryChip label={org.category} size="small" />
+                    <Chip 
+                      label={org.category} 
+                      size="small" 
+                      sx={{ 
+                        position: 'absolute', 
+                        top: 16, 
+                        left: 16, 
+                        fontWeight: 600,
+                        background: 'rgba(255,255,255,0.9)'
+                      }}
+                    />
                     <IconButton
-                      sx={{ position: 'absolute', top: 8, right: 8, color: favorites.has(org.id) ? 'error.main' : 'white' }}
+                      sx={{ position: 'absolute', top: 8, right: 8, color: favorites.has(org.id) ? '#d32f2f' : 'white' }}
                       onClick={() => toggleFavorite(org.id)}
                     >
                       <Favorite />
@@ -296,16 +245,26 @@ const Home = () => {
                     <OrgName>{org.name}</OrgName>
                     <OrgDescription>{org.description}</OrgDescription>
                     
-                    <div style={{ marginTop: 'auto', display: 'flex', gap: 10 }}>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="success"
+                    <ActionBar>
+                      <IconButton onClick={() => navigator.share({ url: window.location.href })}>
+                        <Share />
+                      </IconButton>
+                      <button 
                         onClick={() => navigate(`/donate/${org.id}`)}
+                        style={{
+                          background: '#2e7d32',
+                          color: 'white',
+                          padding: '8px 20px',
+                          borderRadius: '20px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
                       >
                         Support Now
-                      </Button>
-                    </div>
+                        <ArrowForward fontSize="small" />
+                      </button>
+                    </ActionBar>
                   </OrganizationContent>
                 </OrganizationCard>
               </Grid>
@@ -313,26 +272,6 @@ const Home = () => {
           )}
         </AnimatePresence>
       </Grid>
-
-      {hasMore && !isLoading && (
-        <div style={{ textAlign: 'center', margin: '40px 0' }}>
-          <Button
-            variant="outlined"
-            color="success"
-            onClick={() => setPage(prev => prev + 1)}
-            disabled={isLoading}
-          >
-            Load More Organizations
-          </Button>
-        </div>
-      )}
-
-      <Snackbar
-        open={!!error}
-        autoHideDuration={6000}
-        onClose={() => setError(null)}
-        message={error}
-      />
     </PageWrapper>
   );
 };
