@@ -15,7 +15,53 @@ const scaleUp = keyframes`
   to { transform: scale(1); opacity: 1; }
 `;
 
-// Styled components
+const StoryImage = styled.div`
+  width: 100%;
+  height: 240px;
+  background: #eee url(${props => props.src}) center/cover;
+  position: relative;
+  transition: transform 0.3s ease;
+  loading: lazy;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+  }
+`;
+
+const StoryCard = styled.article`
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    
+    ${StoryImage} {
+      transform: scale(1.05);
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    outline: 2px solid #2e7d32;
+    outline-offset: 2px;
+  }
+`;
+
 const ImpactContainer = styled.div`
   max-width: 1280px;
   margin: auto;
@@ -79,47 +125,6 @@ const StoriesGrid = styled.div`
   padding: 1rem;
 `;
 
-const StoryCard = styled.article`
-  background: #fff;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  position: relative;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    
-    ${StoryImage} {
-      transform: scale(1.05);
-    }
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-`;
-
-const StoryImage = styled.div`
-  width: 100%;
-  height: 240px;
-  background: #eee url(${props => props.src}) center/cover;
-  position: relative;
-  transition: transform 0.3s ease;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60%;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-  }
-`;
-
 const StoryContent = styled.div`
   padding: 1.5rem;
   position: relative;
@@ -144,7 +149,7 @@ const StoryStats = styled.div`
   margin: 1rem 0;
 `;
 
-const StatItem = styled.div`
+const StatItem = React.memo(styled.div`
   display: flex;
   align-items: center;
   background: ${props => props.color || '#e8f5e9'};
@@ -156,7 +161,7 @@ const StatItem = styled.div`
   svg {
     margin-right: 0.5rem;
   }
-`;
+`);
 
 const StoryDescription = styled.p`
   color: #666;
@@ -300,7 +305,6 @@ const ScrollTopButton = styled.button`
   }
 `;
 
-// Enhanced stories data
 const stories = [
   {
     id: 1,
@@ -543,25 +547,46 @@ const stories = [
     ]
   }
 ];
+const ErrorFallback = ({ error, resetErrorBoundary }) => (
+  <ImpactContainer>
+    <Title>Something Went Wrong</Title>
+    <Subtitle>
+      {error.message}
+    </Subtitle>
+    <DonateButton onClick={resetErrorBoundary}>
+      Try Again
+    </DonateButton>
+  </ImpactContainer>
+);
 
 const DonationImpact = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({});
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.pageYOffset > 500);
     };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.body.style.overflow = 'auto';
+    };
   }, []);
 
   const handleExpandStory = (story) => {
-    setModalContent(story);
-    setShowModal(true);
-    document.body.style.overflow = 'hidden';
+    try {
+      setModalContent(story);
+      setShowModal(true);
+      document.body.style.overflow = 'hidden';
+    } catch (err) {
+      setError(err);
+    }
   };
 
   const closeModal = () => {
@@ -572,6 +597,10 @@ const DonationImpact = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (error) {
+    return <ErrorFallback error={error} resetErrorBoundary={() => setError(null)} />;
+  }
 
   return (
     <PageWrapper>
@@ -584,15 +613,23 @@ const DonationImpact = () => {
 
         <StoriesGrid>
           {stories.map((story) => (
-            <StoryCard key={story.id} onClick={() => handleExpandStory(story)}>
-              <StoryImage src={story.img}>
+            <StoryCard 
+              key={story.id} 
+              onClick={() => handleExpandStory(story)}
+              role="button"
+              tabIndex="0"
+            >
+              <StoryImage 
+                src={story.img} 
+                aria-label={`${story.title} project image`}
+              >
                 <StoryTitle>{story.title}</StoryTitle>
               </StoryImage>
               <StoryContent>
                 <StoryStats>
                   {story.stats.map((stat, index) => (
                     <StatItem key={index} color={stat.color}>
-                      <FiInfo />
+                      <FiInfo aria-hidden="true" />
                       <div>
                         <div>{stat.value}</div>
                         <div style={{ fontSize: '0.8rem' }}>{stat.label}</div>
@@ -606,16 +643,23 @@ const DonationImpact = () => {
           ))}
         </StoriesGrid>
 
-        <ScrollTopButton visible={showScrollTop} onClick={scrollToTop}>
-          <FiArrowUp size={24} />
+        <ScrollTopButton 
+          visible={showScrollTop} 
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+        >
+          <FiArrowUp size={24} aria-hidden="true" />
         </ScrollTopButton>
       </ImpactContainer>
 
       <ModalOverlay show={showModal} onClick={closeModal}>
         <ModalContent show={showModal} onClick={(e) => e.stopPropagation()}>
           <ModalHeader bg={modalContent.img}>
-            <CloseButton onClick={closeModal}>
-              <FiX size={24} />
+            <CloseButton 
+              onClick={closeModal}
+              aria-label="Close modal"
+            >
+              <FiX size={24} aria-hidden="true" />
             </CloseButton>
           </ModalHeader>
           
@@ -624,7 +668,7 @@ const DonationImpact = () => {
             <StoryStats>
               {modalContent.stats?.map((stat, index) => (
                 <StatItem key={index} color={stat.color}>
-                  <FiInfo />
+                  <FiInfo aria-hidden="true" />
                   <div>
                     <div>{stat.value}</div>
                     <div style={{ fontSize: '0.8rem' }}>{stat.label}</div>
@@ -633,7 +677,10 @@ const DonationImpact = () => {
               ))}
             </StoryStats>
             <ModalText>{modalContent.extendedDesc}</ModalText>
-            <DonateButton onClick={() => navigate('/donate')}>
+            <DonateButton 
+              onClick={() => navigate('/donate')}
+              aria-label="Support similar projects"
+            >
               Support Similar Projects
             </DonateButton>
           </ModalBody>
