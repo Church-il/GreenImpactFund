@@ -563,7 +563,7 @@ const stories = [
   id: 21,
   title: 'Community Irrigation in Kisii',
   img: 'https://www.davisinstruments.com/cdn/shop/articles/iStock_000019952631_Large-scaled-1_1200x800.jpg?v=1693260107',
-  desc: 'Sustainable irrigation systems supporting smallholder farmers.',
+  desc: 'Sustainable irrigation systems supporting 5,000 smallholder farmers.',
   extendedDesc: `A network of 15 community-managed irrigation schemes now waters 1,200 hectares of farmland in Kisii. The project trained 800 farmers in water conservation techniques, increasing crop yields by 65% and providing year-round water access through rainwater harvesting reservoirs.`,
   stats: [
     { label: 'Farmers Trained', value: '5,000', color: '#e0f7fa' },
