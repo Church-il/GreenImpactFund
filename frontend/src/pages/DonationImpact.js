@@ -692,7 +692,7 @@ const DonationImpact = () => {
             </StoryStats>
             <ModalText>{modalContent.extendedDesc}</ModalText>
             <DonateButton 
-              onClick={() => navigate('/donate')}
+              onClick={() => navigate('/donations')}
               aria-label="Support similar projects"
             >
               Support Similar Projects
