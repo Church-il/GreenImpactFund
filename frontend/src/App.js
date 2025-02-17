@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import SettingsDashboard from './pages/SettingsDashboard';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
+import DonationImpact from './pages/DonationImpact';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -56,6 +57,7 @@ function AppWithNavbar() {
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><SettingsDashboard /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/donation-impact" element={<ProtectedRoute><DonationImpact /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
