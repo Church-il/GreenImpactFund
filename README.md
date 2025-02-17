@@ -4,7 +4,6 @@
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-GreenImpactFund-2e7d32?style=for-the-badge)](https://greenimpactfund.netlify.app/)
 [![Presentation Slides](https://img.shields.io/badge/📊_Presentation-Slides-2e7d32?style=for-the-badge)](https://1drv.ms/b/c/0218897d71a98f7a/EWeTl_ALf3BEkcJGg_COxFcBSf1NJUbBxkQtGZ1RV-Po2Q)
 
-![Project Banner](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dreamstime.com%2Fillustration%2Fbanner-eco-friendly.html&psig=AOvVaw0-41PrR5JKMPMuDUBeAxME&ust=1739908317335000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMir0t-9y4sDFQAAAAAdAAAAABAE)
 
 ## 📚 Table of Contents
 1. [Project Overview](#-project-overview)
