@@ -8,30 +8,27 @@ import {
   CircularProgress, 
   Container, 
   TextField, 
-  Button, 
+  Button,
   Chip,
   Dialog,
   DialogContent,
   IconButton,
-  Snackbar,
-  Pagination
+  Snackbar
 } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
-import { Close, Favorite, Share, Edit, Delete } from '@mui/icons-material';
+import { Close, Favorite, Share } from '@mui/icons-material';
 import PageWrapper from '../components/PageWrapper';
 import api from '../utils/api';
-import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import StorySkeleton from '../components/StorySkeleton';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 // Validation schema
 const schema = yup.object().shape({
-  title: yup.string().required().min(10).max(100),
-  content: yup.string().required().min(50).max(1000),
-  image: yup.mixed().required()
+  title: yup.string().required('Title is required').min(10).max(100),
+  content: yup.string().required('Content is required').min(50).max(1000),
+  image: yup.mixed().required('Image is required')
 });
 
 const StyledCard = styled(Card)`
@@ -52,6 +49,7 @@ const StoryImage = styled(CardMedia)`
   height: 300px;
   object-fit: cover;
   position: relative;
+  cursor: pointer;
   &::after {
     content: '';
     position: absolute;
@@ -63,30 +61,6 @@ const StoryImage = styled(CardMedia)`
   }
 `;
 
-const StoryActions = styled.div`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  gap: 8px;
-  z-index: 1;
-`;
-
-const FilterBar = styled.div`
-  display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-`;
-
-const StoryDialog = styled(Dialog)`
-  .MuiPaper-root {
-    border-radius: 16px;
-    max-width: 800px;
-    background: linear-gradient(145deg, #ffffff, #f8f9fa);
-  }
-`;
-
 function Stories() {
   const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     resolver: yupResolver(schema)
@@ -95,38 +69,25 @@ function Stories() {
   const [selectedStory, setSelectedStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [filter, setFilter] = useState('all');
-  const [sort, setSort] = useState('newest');
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
-  const { loadMoreRef } = useInfiniteScroll(loadMoreStories);
 
-  const fetchStories = async () => {
-    try {
-      const response = await api.get(`/stories?page=${page}&filter=${filter}&sort=${sort}`);
-      setStories(response.data.stories);
-      setTotalPages(response.data.totalPages);
-    } catch (err) {
-      setError('Failed to load stories');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  async function loadMoreStories() {
-    if (page < totalPages) {
-      setPage(p => p + 1);
-      const response = await api.get(`/stories?page=${page + 1}&filter=${filter}&sort=${sort}`);
-      setStories(prev => [...prev, ...response.data.stories]);
-    }
-  }
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const response = await api.get('/stories');
+        setStories(response.data);
+      } catch (err) {
+        setError('Failed to load stories');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStories();
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setValue('image', file);
-    }
+    if (file) setValue('image', file);
   };
 
   const onSubmit = async (data) => {
@@ -137,27 +98,23 @@ function Stories() {
       formData.append('image', data.image);
 
       const response = await api.post('/stories', formData);
-      setStories(prev => [response.data.story, ...prev]);
+      setStories([response.data.story, ...stories]);
       reset();
-      setSnackbar({ open: true, message: 'Story created successfully!' });
+      setSnackbar({ open: true, message: 'Story shared successfully!' });
     } catch (err) {
-      setSnackbar({ open: true, message: 'Error creating story' });
+      setSnackbar({ open: true, message: 'Error sharing story' });
     }
   };
 
   const deleteStory = async (id) => {
     try {
       await api.delete(`/stories/${id}`);
-      setStories(prev => prev.filter(story => story.id !== id));
+      setStories(stories.filter(story => story.id !== id));
       setSnackbar({ open: true, message: 'Story deleted successfully!' });
     } catch (err) {
       setSnackbar({ open: true, message: 'Error deleting story' });
     }
   };
-
-  useEffect(() => {
-    fetchStories();
-  }, [filter, sort, page]);
 
   return (
     <PageWrapper>
@@ -171,29 +128,6 @@ function Stories() {
         }}>
           Community Impact Stories
         </Typography>
-
-        <FilterBar>
-          <Chip
-            label="All Stories"
-            color={filter === 'all' ? 'primary' : 'default'}
-            onClick={() => setFilter('all')}
-          />
-          <Chip
-            label="My Stories"
-            color={filter === 'my' ? 'primary' : 'default'}
-            onClick={() => setFilter('my')}
-          />
-          <Chip
-            label="Most Liked"
-            color={sort === 'likes' ? 'primary' : 'default'}
-            onClick={() => setSort('likes')}
-          />
-          <Chip
-            label="Newest First"
-            color={sort === 'newest' ? 'primary' : 'default'}
-            onClick={() => setSort('newest')}
-          />
-        </FilterBar>
 
         <form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: '3rem' }}>
           <TextField
@@ -239,80 +173,70 @@ function Stories() {
         </form>
 
         {loading ? (
-          <Grid container spacing={4}>
-            {[...Array(6)].map((_, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
-                <StorySkeleton />
-              </Grid>
-            ))}
+          <Grid container justifyContent="center">
+            <CircularProgress />
           </Grid>
         ) : error ? (
           <Typography color="error" align="center">{error}</Typography>
         ) : (
-          <>
-            <Grid container spacing={4}>
-              <AnimatePresence>
-                {stories.map((story, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={story.id}>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
+          <Grid container spacing={4}>
+            {stories.map((story, index) => (
+              <Grid item xs={12} sm={6} md={4} key={story.id}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <StyledCard>
+                    <IconButton 
+                      sx={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }} 
+                      onClick={() => deleteStory(story.id)}
                     >
-                      <StyledCard>
-                        <StoryActions>
-                          <IconButton onClick={() => deleteStory(story.id)}>
-                            <Delete color="error" />
-                          </IconButton>
-                          <IconButton>
-                            <Edit color="primary" />
-                          </IconButton>
-                        </StoryActions>
-                        
-                        {story.imageUrl && (
-                          <StoryImage
-                            image={story.imageUrl}
-                            title={story.title}
-                            onClick={() => setSelectedStory(story)}
-                          />
-                        )}
-                        
-                        <CardContent>
-                          <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
-                            {story.title}
-                          </Typography>
-                          <Typography variant="body1" paragraph>
-                            {story.content.substring(0, 150)}...
-                          </Typography>
-                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Button 
-                              variant="text" 
-                              onClick={() => setSelectedStory(story)}
-                              endIcon={<Favorite />}
-                            >
-                              {story.likes}
-                            </Button>
-                            <Button 
-                              variant="outlined" 
-                              onClick={() => setSelectedStory(story)}
-                            >
-                              Read More
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </StyledCard>
-                    </motion.div>
-                  </Grid>
-                ))}
-              </AnimatePresence>
-            </Grid>
-
-            <div ref={loadMoreRef} style={{ height: '20px', margin: '20px 0' }} />
-          </>
+                      <Close color="error" />
+                    </IconButton>
+                    
+                    <StoryImage
+                      image={story.imageUrl}
+                      title={story.title}
+                      onClick={() => setSelectedStory(story)}
+                    />
+                    
+                    <CardContent>
+                      <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
+                        {story.title}
+                      </Typography>
+                      <Typography variant="body1" paragraph>
+                        {story.content.substring(0, 150)}...
+                      </Typography>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Button 
+                          variant="text" 
+                          startIcon={<Favorite />}
+                          onClick={() => setSelectedStory(story)}
+                        >
+                          {story.likes || 0}
+                        </Button>
+                        <Button 
+                          variant="outlined" 
+                          onClick={() => setSelectedStory(story)}
+                        >
+                          Read More
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </StyledCard>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
         )}
 
-        <StoryDialog open={!!selectedStory} onClose={() => setSelectedStory(null)}>
+        <Dialog 
+          open={!!selectedStory} 
+          onClose={() => setSelectedStory(null)}
+          maxWidth="md"
+          fullWidth
+        >
           <DialogContent>
             {selectedStory && (
               <>
@@ -328,7 +252,7 @@ function Stories() {
                     <div>
                       <IconButton>
                         <Favorite />
-                        <Typography>{selectedStory.likes}</Typography>
+                        <Typography>{selectedStory.likes || 0}</Typography>
                       </IconButton>
                       <IconButton>
                         <Share />
@@ -342,7 +266,7 @@ function Stories() {
               </>
             )}
           </DialogContent>
-        </StoryDialog>
+        </Dialog>
 
         <Snackbar
           open={snackbar.open}
