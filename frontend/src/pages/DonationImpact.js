@@ -67,7 +67,7 @@ const StoryDescription = styled.p`
 `;
 
 const stories = [
-  { id: 1, title: 'Clean Water in Turkana', img: 'http://www.visitturkanaland.com/wp-content/uploads/2014/03/Fiebig-Turkana-7687-900x528.jpg', desc: 'A borehole was drilled to provide fresh water to thousands in Turkana County.' },
+  { id: 1, title: 'Clean Water in Turkana', img: 'https://constructiontoday.co.ke/wp-content/uploads/2021/04/McCurry-clean-water.jpg', desc: 'A borehole was drilled to provide fresh water to thousands in Turkana County.' },
   { id: 2, title: 'Solar Power in Kajiado', img: 'https://cyteksolar.com/wp-content/uploads/2024/02/IMG_24951-1-scaled.jpg', desc: 'Solar energy is lighting up homes and schools in remote villages.' },
   { id: 3, title: 'Mangrove Conservation in Kwale', img: 'https://avianreport.com/wp-content/uploads/2018/04/34495210173_0313efca78_c.jpg-blue-forest-_optimized.jpg', desc: 'Local communities are restoring mangrove forests to protect the coast.' },
   { id: 4, title: 'Organic Farming in Murang’a', img: 'https://cdn.wikifarmer.com/images/detailed/2024/06/Organic-Farming-2.jpg', desc: 'Farmers adopt eco-friendly techniques to increase productivity.' },
@@ -78,13 +78,13 @@ const stories = [
   { id: 9, title: 'School Gardens in Kisumu', img: 'https://assets.globalpartnership.org/s3fs-public/styles/standard_blog_banner/public/21631659089_6d03ac524a_k.jpg?VersionId=ro.30NGeJBVzX3mCl4dD62BJHHANq7rd&itok=beM2yz79', desc: 'Students learn about farming through hands-on experience.' },
   { id: 10, title: 'Bamboo Housing in Kitui', img: 'https://archello.s3.eu-central-1.amazonaws.com/images/2020/01/13/1IMG-3754.1578920354.9581.jpg', desc: 'Eco-friendly bamboo houses provide affordable shelter.' },
   { id: 11, title: 'Clean Energy in Marsabit', img: 'https://constructionreviewonline.com/wp-content/uploads/2024/04/US3.jpg', desc: 'Wind turbines now power remote communities.' },
-  { id: 12, title: 'Water Harvesting in Garissa', img: '', desc: 'Rainwater collection helps families survive droughts.' },
+  { id: 12, title: 'Water Harvesting in Garissa', img: 'https://smartwatermagazine.com/sites/default/files/styles/thumbnail-830x455/public/children-playing-water-ethiopia-pixabay.jpg?itok=EU3ukPXX', desc: 'Rainwater collection helps families survive droughts.' },
   { id: 13, title: 'Bee Farming in Bungoma', img: 'https://ogden_images.s3.amazonaws.com/www.iamcountryside.com/images/sites/4/2019/04/13133030/DSC_7203-1026x826-768x618.jpg', desc: 'Sustainable beekeeping boosts honey production and income.' },
   { id: 14, title: 'Plastic-Free Coast in Mombasa', img: 'https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', desc: 'Beach clean-ups and bans on single-use plastics are making a difference.' },
   { id: 15, title: 'Fish Farming in Homabay', img: 'https://5.imimg.com/data5/SELLER/Default/2023/5/309749650/DU/QS/MY/101059949/fish-farming-service.jpg', desc: 'New fish farming methods are improving nutrition and livelihoods.' },
   { id: 16, title: 'Indigenous Tree Revival in Embu', img: 'https://modscape.com.au/wp-content/uploads/2024/03/DN82_Blog-Revival-5.jpg', desc: 'Communities revive indigenous trees for biodiversity.' },
   { id: 17, title: 'Urban Greening in Thika', img: 'https://safiorganics.co.ke/wp-content/uploads/2023/12/images_theconversation_com-file-20190502-103060-k5jeic.webp', desc: 'Green spaces are improving air quality in the city.' },
-  { id: 18, title: 'Sustainable Fashion in Eldoret', img: '', desc: 'Recycled materials are used for eco-friendly clothing.' },
+  { id: 18, title: 'Sustainable Fashion in Eldoret', img: 'https://media.vanityfair.com/photos/5d5588c663a3160008e3a0be/master/pass/sustainable-fashion-lede.jpg', desc: 'Recycled materials are used for eco-friendly clothing.' },
   { id: 19, title: 'Organic Tea Farming in Kericho', img: 'https://safiorganics.co.ke/wp-content/uploads/2021/12/i0_wp_com-TEA-farmers-in-kenya.webp', desc: 'Sustainable tea production benefits farmers and the environment.' },
   { id: 20, title: 'Renewable Energy in Nakuru', img: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVuZXdhYmxlJTIwZW5lcmd5fGVufDB8fDB8fHww', desc: 'Solar and wind energy solutions are growing in Nakuru.' },
 ];
