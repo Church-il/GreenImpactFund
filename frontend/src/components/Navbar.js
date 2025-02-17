@@ -97,38 +97,7 @@ function Navbar() {
               >
                 Dashboard
               </Button>
-              <Button
-                color="inherit"
-                sx={{
-                  marginRight: 2,
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    backgroundColor: '#FF5722',
-                    color: '#fff',
-                  },
-                }}
-                onClick={() => navigate('/donations')}
-                startIcon={<Favorite />}
-              >
-                Donations
-              </Button>
-              <Button
-                color="inherit"
-                sx={{
-                  marginRight: 2,
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    backgroundColor: '#673AB7',
-                    color: '#fff',
-                  },
-                }}
-                onClick={() => navigate('/stories')}
-                startIcon={<Book />}
-              >
-                Stories
-              </Button>
+
               <Button
                 color="inherit"
                 sx={{
@@ -145,6 +114,41 @@ function Navbar() {
               >
                 Impact
               </Button>
+
+              <Button
+                color="inherit"
+                sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#FF5722',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/donations')}
+                startIcon={<Favorite />}
+              >
+                Donations
+              </Button>
+
+              <Button
+                color="inherit"
+                sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#673AB7',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/stories')}
+                startIcon={<Book />}
+              >
+                Stories
+              </Button>
+              
               <Button
                 color="inherit"
                 sx={{
