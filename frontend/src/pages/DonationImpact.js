@@ -84,7 +84,8 @@ const Title = styled.h1`
   margin-bottom: 1.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
-  display: inline-block;
+  display: block;
+  text-align: center; 
 
   &::after {
     content: '';
