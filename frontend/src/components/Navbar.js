@@ -136,7 +136,7 @@ function Navbar() {
                   fontSize: '16px',
                   fontWeight: 'bold',
                   '&:hover': {
-                    backgroundColor: '#793ab7',
+                    backgroundColor: '#f2bf16',
                     color: '#fff',
                   },
                 }}
