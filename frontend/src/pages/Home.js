@@ -153,7 +153,6 @@ const Home = () => {
     return null;
   }
 
-  
   return (
     <PageWrapper>
       <HeroSection>
@@ -161,7 +160,7 @@ const Home = () => {
         <SubText>
           Imagine a world where forests thrive, oceans flourish, and clean air is a reality for all. By supporting impactful organizations, you become a force for change—protecting ecosystems, fighting climate change, and building a sustainable future. Together, we can restore nature’s balance, empower communities, and leave a legacy of hope for generations to come. Let’s unite to safeguard our planet, one act of generosity at a time.
         </SubText>
-        <LearnButton>
+        <LearnButton onClick={() => navigate('/donation-impact')}>
           Learn How Donations Help
         </LearnButton>
       </HeroSection>
