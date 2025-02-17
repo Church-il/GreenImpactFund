@@ -84,7 +84,7 @@ const stories = [
   { id: 15, title: 'Fish Farming in Homabay', img: 'https://5.imimg.com/data5/SELLER/Default/2023/5/309749650/DU/QS/MY/101059949/fish-farming-service.jpg', desc: 'New fish farming methods are improving nutrition and livelihoods.' },
   { id: 16, title: 'Indigenous Tree Revival in Embu', img: 'https://modscape.com.au/wp-content/uploads/2024/03/DN82_Blog-Revival-5.jpg', desc: 'Communities revive indigenous trees for biodiversity.' },
   { id: 17, title: 'Urban Greening in Thika', img: 'https://safiorganics.co.ke/wp-content/uploads/2023/12/images_theconversation_com-file-20190502-103060-k5jeic.webp', desc: 'Green spaces are improving air quality in the city.' },
-  { id: 18, title: 'Sustainable Fashion in Eldoret', img: 'https://media.vanityfair.com/photos/5d5588c663a3160008e3a0be/master/pass/sustainable-fashion-lede.jpg', desc: 'Recycled materials are used for eco-friendly clothing.' },
+  { id: 18, title: 'Sustainable Fashion in Eldoret', img: 'https://img.freepik.com/premium-photo/ankara-kaba-styles-2024_861346-80506.jpg', desc: 'Recycled materials are used for eco-friendly clothing.' },
   { id: 19, title: 'Organic Tea Farming in Kericho', img: 'https://safiorganics.co.ke/wp-content/uploads/2021/12/i0_wp_com-TEA-farmers-in-kenya.webp', desc: 'Sustainable tea production benefits farmers and the environment.' },
   { id: 20, title: 'Renewable Energy in Nakuru', img: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVuZXdhYmxlJTIwZW5lcmd5fGVufDB8fDB8fHww', desc: 'Solar and wind energy solutions are growing in Nakuru.' },
 ];
