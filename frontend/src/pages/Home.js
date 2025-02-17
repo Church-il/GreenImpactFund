@@ -4,8 +4,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/PageWrapper';
 import styled from 'styled-components';
-import { FiChevronUp } from 'react-icons/fi';
+import { FiChevronUp, FiHeart } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import Tooltip from 'react-tooltip';
 
 const API_URL = process.env.REACT_APP_ENV === 'production'
   ? process.env.REACT_APP_API_URL_PROD
@@ -13,111 +15,132 @@ const API_URL = process.env.REACT_APP_ENV === 'production'
 
 const HeroSection = styled.div`
   text-align: center;
-  padding: 80px 20px;
-  background: linear-gradient(135deg, #81c784, #66bb6a);
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #6a1b9a, #8e24aa);
   color: white;
-  border-radius: 12px;
-  margin-bottom: 60px;
-  box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  margin-bottom: 80px;
+  box-shadow: 0px 12px 50px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('your-background-image.jpg') center center no-repeat;
+    background-size: cover;
+    opacity: 0.3;
+  }
 `;
 
-const Title = styled.h3`
-  font-weight: bold;
+const Title = styled.h1`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
   margin-bottom: 20px;
-  font-size: 3rem;
-  letter-spacing: 1px;
+  font-size: 3.6rem;
+  letter-spacing: 2px;
   text-transform: uppercase;
+  color: #fff;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 `;
 
 const SubText = styled.p`
-  max-width: 850px;
+  font-family: 'Roboto', sans-serif;
+  max-width: 900px;
   margin: 0 auto;
   margin-bottom: 40px;
-  line-height: 1.7;
-  font-size: 1.2rem;
-  color: #f1f1f1;
+  line-height: 1.8;
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.9);
 `;
 
 const LearnButton = styled.button`
-  background-color: #2e7d32;
+  background-color: #ff4081;
   color: white;
-  padding: 14px 28px;
-  font-size: 1.1rem;
+  padding: 16px 30px;
+  font-size: 1.3rem;
   border-radius: 50px;
   cursor: pointer;
   border: none;
-  transition: background-color 0.3s, transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    background-color: #1b5e20;
-    transform: translateY(-3px);
+    background-color: #c60055;
+    transform: translateY(-4px);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+    box-shadow: 0 0 12px rgba(255, 64, 129, 0.6);
   }
 `;
 
 const SearchWrapper = styled.div`
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 `;
 
 const SearchInput = styled.input`
-  padding: 12px 25px;
+  padding: 14px 25px;
   width: 80%;
-  max-width: 400px;
-  font-size: 1rem;
+  max-width: 450px;
+  font-size: 1.1rem;
   border-radius: 25px;
   border: 1px solid #ddd;
   outline: none;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
-    border-color: #66bb6a;
+    border-color: #ff4081;
+    box-shadow: 0 0 10px rgba(255, 64, 129, 0.3);
   }
 `;
 
-const Tagline = styled.blockquote`
-  font-size: 1.3rem;
-  font-style: italic;
-  color: #2e7d32;
-  margin: 60px 0;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+const ProgressBarWrapper = styled.div`
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  width: 90%;
+  max-width: 600px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+`;
+
+const ProgressText = styled.p`
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  color: #333;
 `;
 
 const ProgressIndicator = styled.div`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #66bb6a;
-  color: white;
-  padding: 8px 16px;
+  height: 8px;
+  width: 100%;
+  background-color: #e0e0e0;
   border-radius: 50px;
-  font-size: 1rem;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: ${({ progress }) => progress}%;
+    background-color: #ff4081;
+    transition: width 0.4s ease-in-out;
+  }
 `;
 
-const OrganizationsTitle = styled.h4`
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: bold;
-  color: #2e7d32;
-  font-size: 1.6rem;
-  text-transform: uppercase;
-`;
-
-const OrganizationsSubText = styled.p`
-  text-align: center;
-  max-width: 850px;
-  margin: 0 auto;
-  margin-bottom: 50px;
-  line-height: 1.7;
-  font-size: 1.1rem;
-  color: #616161;
+const CardContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 60px;
 `;
 
 const OrganizationCard = styled.div`
@@ -127,16 +150,18 @@ const OrganizationCard = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background-color: #fafafa;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.2);
   }
 `;
 
-const OrganizationImage = styled.img`
-  height: 200px;
+const OrganizationImage = styled(LazyLoadImage)`
+  height: 220px;
   object-fit: cover;
   width: 100%;
 `;
@@ -145,40 +170,58 @@ const OrganizationContent = styled.div`
   padding: 20px;
   text-align: center;
   flex-grow: 1;
-  background-color: #fafafa;
 `;
 
-const OrgName = styled.h5`
-  font-weight: bold;
-  color: #2e7d32;
+const OrgName = styled.h3`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
   margin-bottom: 12px;
-  font-size: 1.4rem;
+  color: #333;
 `;
 
 const OrgDescription = styled.p`
+  font-family: 'Roboto', sans-serif;
   color: #616161;
-  margin-bottom: 24px;
-  font-style: italic;
   font-size: 1rem;
+  line-height: 1.6;
 `;
 
 const DonateButton = styled.button`
-  padding: 10px 20px;
-  background-color: #66bb6a;
+  background-color: #ff4081;
   color: white;
+  padding: 12px 28px;
   border-radius: 30px;
   cursor: pointer;
   border: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background-color: #388e3c;
-    transform: translateY(-2px);
+    background-color: #c60055;
+    transform: translateY(-3px);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 10px rgba(102, 187, 106, 0.5);
+    box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+  }
+`;
+
+const FloatingActionButton = styled.button`
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #ff4081;
+  color: white;
+  padding: 16px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.5rem;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #c60055;
+    transform: translateY(-3px);
   }
 `;
 
@@ -186,17 +229,17 @@ const BackToTopButton = styled.button`
   position: fixed;
   bottom: 40px;
   right: 40px;
-  background-color: #66bb6a;
+  background-color: #ff4081;
   color: white;
-  padding: 14px;
+  padding: 16px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #388e3c;
+    background-color: #c60055;
   }
 
   &:focus {
@@ -204,28 +247,48 @@ const BackToTopButton = styled.button`
   }
 `;
 
+const TestimonialsCarousel = styled.div`
+  margin-top: 80px;
+  padding: 40px;
+  background-color: #f5f5f5;
+  border-radius: 16px;
+`;
+
+const Testimonial = styled.div`
+  text-align: center;
+  margin-bottom: 30px;
+`;
+
+const TestimonialText = styled.p`
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
+  color: #616161;
+  font-size: 1.2rem;
+  line-height: 1.5;
+`;
+
+const TestimonialAuthor = styled.h4`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #333;
+  margin-top: 10px;
+`;
+
 const Home = () => {
   const [organizations, setOrganizations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [donationProgress, setDonationProgress] = useState(75); // Placeholder for donation progress
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [donationProgress, setDonationProgress] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login', { replace: true });
-    } else {
-      async function fetchOrganizations() {
-        try {
-          const response = await axios.get(`${API_URL}/organizations`);
-          setOrganizations(response.data.organizations);
-        } catch (error) {
-          console.error('Error fetching organizations:', error);
-        }
-      }
-      fetchOrganizations();
-    }
-  }, [isAuthenticated, navigate]);
+    axios.get(`${API_URL}/organizations`).then((response) => {
+      setOrganizations(response.data);
+    });
+
+    axios.get(`${API_URL}/donation-progress`).then((response) => {
+      setDonationProgress(response.data.progress);
+    });
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -235,68 +298,70 @@ const Home = () => {
     org.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  const handleDonateClick = (orgId) => {
+    navigate(`/donate/${orgId}`);
+  };
 
   return (
     <PageWrapper>
       <HeroSection>
-        <Title>Together for the Planet</Title>
+        <Title>Change the World with Your Donation</Title>
         <SubText>
-          Imagine a world where forests thrive, oceans flourish, and clean air is a reality for all. By supporting impactful organizations, you become a force for change—protecting ecosystems, fighting climate change, and building a sustainable future. Together, we can restore nature’s balance, empower communities, and leave a legacy of hope for generations to come. Let’s unite to safeguard our planet, one act of generosity at a time.
+          Join us in supporting environmental preservation and social change. Make a difference with just a few clicks!
         </SubText>
-        <LearnButton onClick={() => navigate('/donation-impact')}>
-          Learn How Donations Help
-        </LearnButton>
+        <LearnButton onClick={() => navigate('/about')}>Learn More</LearnButton>
       </HeroSection>
-
       <SearchWrapper>
         <SearchInput
           type="text"
-          placeholder="Search Organizations"
+          placeholder="Search for organizations..."
           value={searchQuery}
           onChange={handleSearchChange}
         />
       </SearchWrapper>
-
-      <Tagline>"Together, we can build a sustainable future for generations to come."</Tagline>
-
-      <ProgressIndicator>
-        {donationProgress}% Donated
-      </ProgressIndicator>
-
-      <OrganizationsTitle>Explore Environmental Organizations</OrganizationsTitle>
-      <OrganizationsSubText>
-        Explore organizations devoted to restoring lush forests, safeguarding endangered wildlife, reducing harmful carbon emissions, and promoting innovative solutions for a sustainable future. Each cause holds the power to create positive change—choose one that inspires you and take the first step toward making a lasting difference. Together, we can build a healthier planet and secure a brighter future for generations to come.
-      </OrganizationsSubText>
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+      <CardContainer>
         {filteredOrganizations.map((org) => (
-          <div key={org.id} style={{ flex: '1 0 30%', maxWidth: '300px' }}>
+          <motion.div key={org.id} whileHover={{ scale: 1.05 }}>
             <OrganizationCard>
-              {org.image && <OrganizationImage src={org.image} alt={`${org.name} logo`} />}
+              <OrganizationImage src={org.image} alt={org.name} />
               <OrganizationContent>
                 <OrgName>{org.name}</OrgName>
-                <OrgDescription>
-                  {org.description.length > 100
-                    ? `${org.description.substring(0, 100)}...`
-                    : org.description}
-                </OrgDescription>
-                <DonateButton onClick={() => window.location.href = `/donate/${org.id}`}>
+                <OrgDescription>{org.description}</OrgDescription>
+                <DonateButton onClick={() => handleDonateClick(org.id)}>
                   Donate Now
                 </DonateButton>
               </OrganizationContent>
             </OrganizationCard>
-          </div>
+          </motion.div>
         ))}
-      </div>
-
+      </CardContainer>
+      <ProgressBarWrapper>
+        <ProgressText>Donation Progress</ProgressText>
+        <ProgressIndicator progress={donationProgress} />
+      </ProgressBarWrapper>
+      <TestimonialsCarousel>
+        {[
+          {
+            text: "This platform has helped me donate to amazing causes! I love being part of the change.",
+            author: "Jane Doe",
+          },
+          {
+            text: "I'm so glad to support environmental preservation with a few simple clicks.",
+            author: "John Smith",
+          },
+        ].map((testimonial, index) => (
+          <Testimonial key={index}>
+            <TestimonialText>{testimonial.text}</TestimonialText>
+            <TestimonialAuthor>- {testimonial.author}</TestimonialAuthor>
+          </Testimonial>
+        ))}
+      </TestimonialsCarousel>
+      <FloatingActionButton onClick={() => navigate('/donate')}>+</FloatingActionButton>
       <BackToTopButton onClick={() => window.scrollTo(0, 0)}>
         <FiChevronUp />
       </BackToTopButton>
     </PageWrapper>
   );
-}
+};
 
 export default Home;
