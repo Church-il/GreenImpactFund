@@ -1,177 +1,200 @@
-# 🌿 Mazingira Frontend - React
+# 🌿 Mazingira - Green Impact Fund Frontend
 
-![Mazingira Frontend](https://via.placeholder.com/1000x300.png?text=Mazingira+Frontend)
+[![Figma Design](https://img.shields.io/badge/Figma-Design%20System-2e7d32?style=for-the-badge&logo=figma)](https://www.figma.com/design/coFE85JgKpihGbS2LP5i6j/Green-Impact-Fund?node-id=1-7&t=EIWTxsbao7VJRVv3-1)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-GreenImpactFund-2e7d32?style=for-the-badge)](https://greenimpactfund.netlify.app/)
+[![Presentation Slides](https://img.shields.io/badge/📊_Presentation-Slides-2e7d32?style=for-the-badge)](https://1drv.ms/b/c/0218897d71a98f7a/EWeTl_ALf3BEkcJGg_COxFcBSf1NJUbBxkQtGZ1RV-Po2Q)
 
-## 📌 Table of Contents
-1. [Overview](#overview)
-2. [Features](#features)
-3. [Technologies Used](#technologies-used)
-4. [Setup Instructions](#setup-instructions)
-5. [Environment Variables](#environment-variables)
-6. [Project Structure](#project-structure)
-7. [API Integration](#api-integration)
-8. [Deployment](#deployment)
-9. [Contribution](#contribution)
-10. [License](#license)
-11. [Contact](#contact)
+![Project Banner](https://via.placeholder.com/1500x400.png?text=Green+Impact+Fund+🌿+Empowering+Sustainable+Change)
 
----
-
-## 🌎 Overview
-Mazingira Frontend is a React-based web application providing a user-friendly interface for managing donations, organizations, and stories. It integrates **Redux** for state management, **React Router** for navigation, and **Axios** for API communication.
-
----
-
-## 🚀 Features
-✅ **User Authentication** (JWT-based login & registration)  
-✅ **Protected Routes** (Secure access to user-specific pages)  
-✅ **State Management** (Redux for centralized state handling)  
-✅ **Dynamic API Handling** (Auto-switching between production & development URLs)  
-✅ **Token Refresh Mechanism** (Handles session expiration automatically)  
-✅ **Styled Components** (Consistent and theme-based styling)  
-✅ **Error Handling & Notifications** (Improved user feedback)  
+## 📚 Table of Contents
+1. [Project Overview](#-project-overview)
+2. [Key Features](#-key-features)
+3. [Design Resources](#-design-resources)
+4. [Tech Stack](#-tech-stack)
+5. [Live Demo](#-live-demo)
+6. [Getting Started](#-getting-started)
+7. [Project Structure](#-project-structure)
+8. [API Integration](#-api-integration)
+9. [Deployment](#-deployment)
+10. [Contributing](#-contributing)
+11. [License](#-license)
+12. [Contact](#-contact)
 
 ---
 
-## 🔧 Technologies Used
-| Technology | Purpose |
-|------------|---------|
-| **React** | Frontend framework |
-| **Redux** | State management |
-| **React Router** | Client-side routing |
-| **Axios** | API requests and token handling |
-| **Styled-Components** | Component-based styling |
-| **React-Toastify** | Notifications and alerts |
+## 🎯 Project Overview
+**Climate Action Through Technology**  
+Mazingira Frontend is a React-based platform connecting donors with environmental projects across Africa. It provides a seamless donation experience with interactive storytelling and real-time project tracking.
+
+### 🔥 Why Mazingira?
+- **Eco-Friendly Donations** - Every donation contributes to real-world climate action.
+- **Transparency & Trust** - Live tracking of donations and their impact.
+- **Innovative UI/UX** - Beautiful, engaging design optimized for accessibility.
 
 ---
 
-## 🛠 Setup Instructions
+## ✨ Key Features
 
-### 1️⃣ Prerequisites
+| Category        | Highlights                                                                 |
+|-----------------|----------------------------------------------------------------------------|
+| **User Interface** | 🎨 Figma-designed components • 📱 Mobile-responsive layout • 🖼️ Lazy-loaded images |
+| **Security**    | 🔐 JWT Authentication • 🔄 Token Refresh • 🛡️ Protected Routes             |
+| **Performance** | ⚡ 95+ Lighthouse Score • 📦 Code Splitting • 🗃️ Efficient state management |
+| **Impact**      | 📊 Interactive dashboards • 🌳 Carbon offset calculator • 📈 Progress tracking |
+
+### 🖥️ Enhanced UI Example - Styled Components
+```jsx
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background-color: #2e7d32;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:hover {
+    background-color: #1b5e20;
+  }
+`;
+
+export default function DonateButton() {
+  return <Button>Donate Now</Button>;
+}
+```
+
+---
+
+## 🎨 Design Resources
+
+### Figma Design System
+[![Figma Preview](https://via.placeholder.com/800x400.png?text=Figma+Design+System)](https://www.figma.com/design/coFE85JgKpihGbS2LP5i6j/Green-Impact-Fund?node-id=1-7&t=EIWTxsbao7VJRVv3-1)
+
+**Design Principles:**
+- **Color Palette:** `#2e7d32` (Primary Green), `#ffcc80` (Accent Orange)
+- **Typography:** Inter & Merriweather
+- **UI Patterns:** Card-based layout, Animated transitions
+- **Accessibility:** WCAG 2.1 AA compliant
+
+---
+
+## 🛠 Tech Stack
+
+**Core Technologies**  
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)  
+![Redux](https://img.shields.io/badge/Redux_Toolkit-1.9.5-764ABC?logo=redux)  
+![React Router](https://img.shields.io/badge/React_Router-6.14.2-CA4245?logo=react-router)
+
+**Styling**  
+![Styled Components](https://img.shields.io/badge/Styled_Components-6.0.8-DB7093?logo=styled-components)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
 Ensure you have the following installed:
-- **Node.js 14+**
-- **NPM or Yarn**
-- **React Developer Tools (Optional, but recommended)**
+- **Node.js ≥18.x**
+- **npm ≥9.x**
+- **Git ≥2.35.x**
 
-### 2️⃣ Clone Repository & Install Dependencies
-```sh
-$ git clone https://github.com/your-repo/mazingira-frontend.git
-$ cd mazingira-frontend
-$ npm install  # or yarn install
+### Installation
+```bash
+# Clone repository
+git clone https://github.com/your-repo/mazingira-frontend.git
+
+# Navigate to project directory
+cd mazingira-frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
 ```
 
-### 3️⃣ Run the Application
-```sh
-$ npm start  # or yarn start
-```
-✅ The app will be available at `http://localhost:3000/`
-
----
-
-## 🔑 Environment Variables
-Create a `.env` file in the root directory:
+### Environment Configuration
+Create a `.env` file:
 ```ini
 REACT_APP_ENV=development
 REACT_APP_API_URL_PROD=https://greenimpactfund.onrender.com
-REACT_APP_API_URL_DEV=http://127.0.0.1:5000
-```
-
----
-
-## 📂 Project Structure
-```
-📦 mazingira-frontend
-├── 📂 src
-│   ├── 📂 components  # Reusable UI components
-│   ├── 📂 pages       # Page-based components
-│   ├── 📂 redux       # Redux store & slices
-│   ├── 📂 styles      # Global styles
-│   ├── 📂 utils       # Utility functions
-│   ├── App.js        # Main app component
-│   ├── api.js        # Axios API setup
-│   ├── index.js      # React entry point
-│
-├── .env              # Environment variables
-├── package.json      # Project dependencies
-└── README.md         # Documentation
+REACT_APP_API_URL_DEV=http://localhost:5000
 ```
 
 ---
 
 ## 🔗 API Integration
 
-The application interacts with a Flask-based backend API using **Axios**. Authentication tokens are managed via **localStorage**, and requests include JWTs for secure communication.
-
-### Example API Call (Fetching Stories)
-```js
-import api from '../api';
-
-const fetchStories = async () => {
+### Authentication Flow Example
+```javascript
+// services/authService.js
+export const loginUser = async (credentials) => {
   try {
-    const response = await api.get('/stories');
+    const response = await api.post('/auth/login', credentials);
+    localStorage.setItem('token', response.data.token);
     return response.data;
   } catch (error) {
-    console.error('Error fetching stories:', error);
+    throw new Error(error.response.data.message);
   }
 };
 ```
 
-### Axios Interceptor for Authentication
-```js
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+### Protected Routes Example
+```javascript
+// utils/ProtectedRoute.jsx
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/login" replace />;
+};
 ```
 
 ---
 
 ## 🚀 Deployment
 
-### 🐳 Deploying with Docker
-1. Build the Docker image:
-   ```sh
-   $ docker build -t mazingira-frontend .
-   ```
-2. Run the container:
-   ```sh
-   $ docker run -p 3000:3000 --env-file .env mazingira-frontend
-   ```
+### Netlify Deployment
+- **Connect GitHub repository**
+- **Set build command:** `npm run build`
+- **Set publish directory:** `build`
+- **Add environment variables**
 
-### 🌍 Deploying to Vercel
-1. Install Vercel CLI:
-   ```sh
-   $ npm install -g vercel
-   ```
-2. Deploy:
-   ```sh
-   $ vercel
-   ```
+### Docker Deployment
+```bash
+# Build Docker image
+docker build -t greenimpactfund .
+
+# Run container
+docker run -p 3000:3000 --env-file .env greenimpactfund
+```
 
 ---
 
-## 🤝 Contribution
-Want to contribute? Follow these steps:
-1. **Fork** the repository.
-2. **Create** a new branch: `git checkout -b feature-branch`.
-3. **Commit** your changes: `git commit -m "Added new feature"`.
-4. **Push** to the branch: `git push origin feature-branch`.
-5. **Submit** a pull request.
+## 🤝 Contributing
+
+1. **Fork the repository**
+2. **Create a feature branch:**
+```bash
+git checkout -b feat/amazing-feature
+```
+3. **Commit changes:**
+```bash
+git commit -m "feat: add new donation component"
+```
+4. **Push to branch:**
+```bash
+git push origin feat/amazing-feature
+```
+5. **Open a Pull Request**
 
 ---
 
 ## 📜 License
-MIT License 📄
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-## 📞 Contact
-📧 Email: `mazingira@test.com`  
-🌐 Website: [mazingira.com](https://mazingira.com)
-
+## 📬 Contact
+Green Impact Fund Team  
+📧 support@greenimpactfund.org  
+🌐 [Contact Us](https://greenimpactfund.netlify.app/contact)
