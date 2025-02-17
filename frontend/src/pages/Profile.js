@@ -1,375 +1,415 @@
 import api from '../utils/api'; 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TextField, Button, Typography, Container, Grid, IconButton,
   InputAdornment, LinearProgress, Switch, FormControlLabel,
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   List, ListItem, ListItemText, Divider, Box, Tabs, Tab, Avatar,
-  FormControl, InputLabel, Select, MenuItem, Collapse
+  FormControl, InputLabel, Select, MenuItem, Collapse, Alert
 } from '@mui/material';
 import {
   Edit, Save, Logout, Delete, Security, CloudDownload, ExpandMore,
-  ExpandLess, Cake, Work, Link, Visibility, VisibilityOff, Transgender, Lock
+  ExpandLess, Cake, Work, Link, Visibility, VisibilityOff, 
+  Transgender, Lock, PhotoCamera, VerifiedUser
 } from '@mui/icons-material';
-import { colors } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import PasswordStrengthBar from 'react-password-strength-bar';
+
+// Validation Schema
+const profileSchema = yup.object().shape({
+  firstName: yup.string().required('First name is required').max(50),
+  lastName: yup.string().required('Last name is required').max(50),
+  email: yup.string().email('Invalid email').required('Email is required'),
+  phone: yup.string().matches(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
+  bio: yup.string().max(500, 'Bio cannot exceed 500 characters'),
+  password: yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, 
+      'Password must contain uppercase, lowercase, and number'),
+  confirmPassword: yup.string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+});
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    firstName: 'Current',
-    lastName: 'User',
-    username: '@currentuser',
-    phone: '+1234567890',
-    address: 'Nairobi, Kenya',
-    bio: 'Digital Creator',
-    gender: 'male/female',
-    dateOfBirth: '1990-01-01',
-    occupation: 'Software Developer',
-    website: 'https://portfolio.currentuser.com',
-    password: '',
-    confirmPassword: '',
-    darkMode: false,
-    twoFactorAuth: false,
-    language: 'en',
-    profileVisibility: 'public',
-    linkedin: '',
-    github: ''
+  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: yupResolver(profileSchema)
   });
-
+  
+  const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [expandedSection, setExpandedSection] = useState(null);
-  const [saveStatus, setSaveStatus] = useState({ success: null, message: '' });
+  const [profileImage, setProfileImage] = useState(null);
+  const [twoFactorStep, setTwoFactorStep] = useState(0);
+  const [verificationCode, setVerificationCode] = useState('');
   const navigate = useNavigate();
 
-  const themeColors = [
-    colors.blue[700], colors.red[700], colors.green[700],
-    colors.purple[700], colors.orange[700]
-  ];
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await api.get('/api/user/profile');
+        setUser(response.data);
+        reset(response.data);
+      } catch (error) {
+        toast.error('Failed to load profile');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserProfile();
+  }, []);
 
-  const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'es', name: 'Spanish' },
-    { code: 'fr', name: 'French' }
-  ];
-
-  const handleSectionToggle = (section) => {
-    setExpandedSection(expandedSection === section ? null : section);
-  };
-
-  const handleColorChange = (color) => {
-    setUser(prev => ({ ...prev, themeColor: color }));
-    document.documentElement.style.setProperty('--primary-color', color);
-  };
-
-  const handleSaveChanges = async () => {
-    setLoading(true);
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    
     try {
-      await api.put('/api/user/profile', user); //api instance
-      setSaveStatus({ success: true, message: 'Changes saved successfully!' });
-      setTimeout(() => setSaveStatus({ success: null, message: '' }), 3000);
+      const response = await api.patch('/api/user/avatar', formData);
+      setUser(prev => ({ ...prev, avatar: response.data.avatar }));
+      toast.success('Profile image updated');
     } catch (error) {
-      setSaveStatus({ success: false, message: 'Error saving changes' });
-    } finally {
-      setLoading(false);
-      setEditMode(false);
+      toast.error('Image upload failed');
     }
   };
 
-  const handleExportData = async () => {
-    const response = await api.get('/api/user/export'); //api instance
-    const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'user-data.json';
-    a.click();
+  const handleSaveChanges = async (data) => {
+    try {
+      const response = await api.put('/api/user/profile', data);
+      setUser(response.data);
+      reset(response.data);
+      toast.success('Profile updated successfully');
+      setEditMode(false);
+    } catch (error) {
+      toast.error('Failed to update profile');
+    }
   };
 
+  const handlePasswordChange = async (data) => {
+    try {
+      await api.post('/api/user/change-password', {
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword
+      });
+      toast.success('Password changed successfully');
+    } catch (error) {
+      toast.error('Password change failed');
+    }
+  };
+
+  const handleTwoFactorAuth = async () => {
+    try {
+      if (!user.twoFactorEnabled) {
+        const response = await api.post('/api/user/2fa/enable');
+        setTwoFactorStep(1);
+        toast.info('Check your email for verification code');
+      } else {
+        await api.post('/api/user/2fa/disable');
+        setUser(prev => ({ ...prev, twoFactorEnabled: false }));
+        toast.success('Two-factor authentication disabled');
+      }
+    } catch (error) {
+      toast.error('Two-factor operation failed');
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    try {
+      await api.post('/api/user/2fa/verify', { code: verificationCode });
+      setUser(prev => ({ ...prev, twoFactorEnabled: true }));
+      setTwoFactorStep(0);
+      toast.success('Two-factor authentication enabled');
+    } catch (error) {
+      toast.error('Invalid verification code');
+    }
+  };
+
+  if (loading) return <LinearProgress />;
+
   return (
-    <Container maxWidth="xl" sx={{
-      height: '92.99vh',
-      py: 4,
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      transition: 'all 0.3s ease'
-    }}>
-      <Grid container spacing={3} sx={{ height: '100%' }}>
-        <Grid item xs={3}>
+    <Container maxWidth="xl" sx={{ py: 4, minHeight: '100vh' }}>
+      <Grid container spacing={3}>
+        {/* Left Sidebar */}
+        <Grid item xs={12} md={3}>
           <Box sx={{
-            p: 2,
-            height: '100%',
-            borderRadius: '20px',
-            background: 'linear-gradient(145deg, #2c3e50, #3498db)',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
+            p: 3,
+            borderRadius: 4,
+            bgcolor: 'background.paper',
+            boxShadow: 3,
+            textAlign: 'center'
           }}>
-                        <Box sx={{ textAlign: 'center', mb: 3 }}>
-              <Avatar sx={{
-                width: 80,
-                height: 80,
-                mb: 2,
-                border: `2px solid ${user.themeColor}`,
-                background: 'linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%)'
-              }}/>
-              <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
-                {user.firstName} {user.lastName}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-                {user.username}
-              </Typography>
+            <Box sx={{ position: 'relative', mb: 2 }}>
+              <Avatar
+                src={user?.avatar}
+                sx={{
+                  width: 120,
+                  height: 120,
+                  mb: 2,
+                  border: '3px solid',
+                  borderColor: 'primary.main'
+                }}
+              />
+              {editMode && (
+                <IconButton
+                  sx={{
+                    position: 'absolute',
+                    bottom: 8,
+                    right: 8,
+                    bgcolor: 'background.paper'
+                  }}
+                  component="label"
+                >
+                  <PhotoCamera />
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => handleImageUpload(e.target.files[0])}
+                  />
+                </IconButton>
+              )}
             </Box>
+
+            <Typography variant="h6" gutterBottom>
+              {user?.firstName} {user?.lastName}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {user?.title || 'Member'}
+            </Typography>
 
             <Tabs
               orientation="vertical"
               value={activeTab}
               onChange={(e, newValue) => setActiveTab(newValue)}
-              sx={{
-                '& .MuiTab-root': {
-                  color: 'rgba(255,255,255,0.7)',
-                  borderRadius: '8px',
-                  margin: '4px 0',
-                  '&.Mui-selected': {
-                    color: 'white',
-                    background: 'linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)'
-                  },
-                  '&:hover': {
-                    backgroundColor: 'rgba(255,255,255,0.1)'
-                  }
-                }
-              }}
+              sx={{ mt: 3 }}
             >
-              <Tab label="Profile" icon={<Edit sx={{ color: 'inherit' }} />} />
-              <Tab label="Security" icon={<Security sx={{ color: 'inherit' }} />} />
-              <Tab label="Advanced" icon={<ExpandMore sx={{ color: 'inherit' }} />} />
+              <Tab label="Profile" icon={<Edit />} />
+              <Tab label="Security" icon={<Security />} />
+              <Tab label="Advanced" icon={<ExpandMore />} />
             </Tabs>
           </Box>
         </Grid>
 
-        <Grid item xs={9}>
+        {/* Main Content */}
+        <Grid item xs={12} md={9}>
           <Box sx={{
             p: 3,
-            height: '95%',
-            borderRadius: '20px',
-            background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
-            overflow: 'hidden',
-            '&:hover': { overflowY: 'auto' },
-            '&::-webkit-scrollbar': { width: '6px' },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: 'rgba(0,0,0,0.2)',
-              borderRadius: '4px'
-            }
+            borderRadius: 4,
+            bgcolor: 'background.paper',
+            boxShadow: 3
           }}>
+            {/* Profile Tab */}
             {activeTab === 0 && (
-              <Box>
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  mb: 3,
-                  background: 'linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%)',
-                  p: 2,
-                  borderRadius: '12px'
-                }}>
-                  <Typography variant="h5" sx={{ fontWeight: 700 }}>Profile Settings</Typography>
-                  <Button
-                    variant="contained"
-                    onClick={editMode ? handleSaveChanges : () => setEditMode(true)}
-                    startIcon={editMode ? <Save /> : <Edit />}
-                    sx={{
-                      background: 'linear-gradient(45deg, #4CAF50 30%, #8BC34A 90%)',
-                      borderRadius: '8px',
-                      color: 'white'
-                    }}
-                  >
-                    {editMode ? 'Save Profile' : 'Edit Profile'}
-                  </Button>
+              <form onSubmit={handleSubmit(handleSaveChanges)}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+                  <Typography variant="h5">Profile Settings</Typography>
+                  <Box>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setEditMode(!editMode)}
+                      sx={{ mr: 2 }}
+                    >
+                      {editMode ? 'Cancel' : 'Edit Profile'}
+                    </Button>
+                    {editMode && (
+                      <Button type="submit" variant="contained" color="primary">
+                        Save Changes
+                      </Button>
+                    )}
+                  </Box>
                 </Box>
 
                 <Grid container spacing={3}>
-                  {[
-                    { field: 'firstName', label: 'First Name' },
-                    { field: 'lastName', label: 'Last Name' },
-                    { field: 'username', label: 'Username' },
-                    { field: 'phone', label: 'Phone' },
-                    { field: 'dateOfBirth', label: 'Birth Date', type: 'date' },
-                    { field: 'occupation', label: 'Occupation' },
-                    { field: 'website', label: 'Website', type: 'url' },
-                    { field: 'linkedin', label: 'LinkedIn', type: 'url' },
-                    { field: 'github', label: 'GitHub', type: 'url' },
-                  ].map(({ field, label, type }) => (
-                    <Grid item xs={6} key={field}>
-                      <TextField
-                        fullWidth
-                        label={label}
+                  {['firstName', 'lastName', 'email', 'phone'].map((field) => (
+                    <Grid item xs={12} sm={6} key={field}>
+                      <Controller
                         name={field}
-                        type={type || 'text'}
-                        value={user[field]}
-                        onChange={(e) => setUser({ ...user, [field]: e.target.value })}
-                        disabled={!editMode}
-                        InputProps={{
-                          startAdornment: field === 'dateOfBirth' && (
-                            <InputAdornment position="start">
-                              <Cake />
-                            </InputAdornment>
-                          )
-                        }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                            background: 'rgba(245, 245, 245, 0.4)'
-                          }
-                        }}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            fullWidth
+                            label={field.charAt(0).toUpperCase() + field.slice(1)}
+                            disabled={!editMode}
+                            error={!!errors[field]}
+                            helperText={errors[field]?.message}
+                          />
+                        )}
                       />
                     </Grid>
                   ))}
 
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
-                      <InputLabel>Gender</InputLabel>
-                      <Select
-                        value={user.gender}
-                        onChange={(e) => setUser({ ...user, gender: e.target.value })}
-                        label="Gender"
-                        disabled={!editMode}
-                        startAdornment={
-                          <InputAdornment position="start">
-                            <Transgender />
-                          </InputAdornment>
-                        }
-                      >
-                        <MenuItem value="male">Male</MenuItem>
-                        <MenuItem value="female">Female</MenuItem>
-                        <MenuItem value="other">Other</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
-                      <InputLabel>Profile Visibility</InputLabel>
-                      <Select
-                        value={user.profileVisibility}
-                        onChange={(e) => setUser({ ...user, profileVisibility: e.target.value })}
-                        label="Profile Visibility"
-                        disabled={!editMode}
-                        startAdornment={
-                          <InputAdornment position="start">
-                            <Lock />
-                          </InputAdornment>
-                        }
-                      >
-                        <MenuItem value="public">Public</MenuItem>
-                        <MenuItem value="private">Private</MenuItem>
-                        <MenuItem value="friends-only">Friends Only</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
                   <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Bio"
+                    <Controller
                       name="bio"
-                      multiline
-                      rows={4}
-                      value={user.bio}
-                      onChange={(e) => setUser({ ...user, bio: e.target.value })}
-                      disabled={!editMode}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px',
-                          background: 'rgba(245, 245, 245, 0.4)'
-                        }
-                      }}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          fullWidth
+                          multiline
+                          rows={4}
+                          label="Bio"
+                          disabled={!editMode}
+                          error={!!errors.bio}
+                          helperText={errors.bio?.message}
+                        />
+                      )}
                     />
                   </Grid>
                 </Grid>
-              </Box>
+              </form>
             )}
 
+            {/* Security Tab */}
             {activeTab === 1 && (
               <Box>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>Security</Typography>
-                <List sx={{ background: 'rgba(255,255,255,0.6)', borderRadius: '12px', p: 1 }}>
-                  <ListItem sx={{ borderRadius: '8px' }}>
+                <Typography variant="h5" gutterBottom>Security Settings</Typography>
+                
+                <List sx={{ mb: 3 }}>
+                  <ListItem>
                     <FormControlLabel
-                      control={<Switch checked={user.twoFactorAuth} onChange={(e) => setUser({ ...user, twoFactorAuth: e.target.checked })} />}
+                      control={
+                        <Switch
+                          checked={user?.twoFactorEnabled}
+                          onChange={handleTwoFactorAuth}
+                        />
+                      }
                       label="Two-Factor Authentication"
+                      labelPlacement="start"
+                      sx={{ width: '100%', justifyContent: 'space-between' }}
                     />
                   </ListItem>
-                  <ListItem sx={{ borderRadius: '8px' }}>
-                    <TextField
-                      fullWidth
-                      label="New Password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={user.password}
-                      onChange={(e) => setUser({ ...user, password: e.target.value })}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={() => setShowPassword(!showPassword)}>
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </ListItem>
+
+                  {twoFactorStep === 1 && (
+                    <Box sx={{ p: 2, bgcolor: 'action.hover', borderRadius: 2 }}>
+                      <TextField
+                        fullWidth
+                        label="Verification Code"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        InputProps={{
+                          endAdornment: (
+                            <Button 
+                              onClick={handleVerifyCode}
+                              variant="contained"
+                            >
+                              Verify
+                            </Button>
+                          )
+                        }}
+                      />
+                    </Box>
+                  )}
+
+                  <Divider sx={{ my: 2 }} />
+
+                  <form onSubmit={handleSubmit(handlePasswordChange)}>
+                    <Typography variant="h6" gutterBottom>Change Password</Typography>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <Controller
+                          name="currentPassword"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              fullWidth
+                              type="password"
+                              label="Current Password"
+                              error={!!errors.currentPassword}
+                              helperText={errors.currentPassword?.message}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Controller
+                          name="newPassword"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              fullWidth
+                              type="password"
+                              label="New Password"
+                              error={!!errors.newPassword}
+                              helperText={errors.newPassword?.message}
+                            />
+                          )}
+                        />
+                        <PasswordStrengthBar password={watch('newPassword')} />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button type="submit" variant="contained">
+                          Change Password
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
                 </List>
               </Box>
             )}
 
+            {/* Advanced Tab */}
             {activeTab === 2 && (
               <Box>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>Advanced</Typography>
-                <List sx={{ background: 'rgba(255,255,255,0.6)', borderRadius: '12px', p: 1 }}>
-                  <ListItem 
-                    button 
-                    onClick={() => handleSectionToggle('data')}
-                    sx={{ borderRadius: '8px' }}
-                  >
+                <Typography variant="h5" gutterBottom>Advanced Settings</Typography>
+                
+                <List>
+                  <ListItem button onClick={() => handleSectionToggle('data')}>
                     <ListItemText primary="Data Management" />
                     {expandedSection === 'data' ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse in={expandedSection === 'data'}>
-                    <ListItem>
+                    <Box sx={{ p: 2 }}>
                       <Button
                         variant="outlined"
                         startIcon={<CloudDownload />}
                         onClick={handleExportData}
-                        sx={{
-                          borderColor: '#2196f3',
-                          color: '#2196f3',
-                          '&:hover': { background: 'rgba(33, 150, 243, 0.1)' }
-                        }}
                       >
-                        Export All Data
+                        Export Data
                       </Button>
-                    </ListItem>
+                    </Box>
                   </Collapse>
-                </List>
-              </Box>
-            )}
 
-            {saveStatus.message && (
-              <Box sx={{
-                position: 'fixed',
-                bottom: 20,
-                right: 20,
-                p: 2,
-                borderRadius: '8px',
-                background: saveStatus.success 
-                  ? 'linear-gradient(45deg, #4CAF50 30%, #8BC34A 90%)' 
-                  : 'linear-gradient(45deg, #ff5252 30%, #ff867f 90%)',
-                color: 'white',
-                boxShadow: '0 3px 10px rgba(0,0,0,0.1)'
-              }}>
-                <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                  {saveStatus.message}
-                </Typography>
+                  <ListItem button onClick={() => setOpenDeleteDialog(true)}>
+                    <ListItemText 
+                      primary="Delete Account" 
+                      secondary="Permanently remove your account and all data"
+                    />
+                    <Delete color="error" />
+                  </ListItem>
+                </List>
+
+                <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+                  <DialogTitle>Confirm Account Deletion</DialogTitle>
+                  <DialogContent>
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      This action cannot be undone!
+                    </Alert>
+                    <TextField
+                      fullWidth
+                      label="Type 'DELETE' to confirm"
+                      onChange={(e) => setDeleteConfirmation(e.target.value)}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
+                    <Button 
+                      color="error"
+                      disabled={deleteConfirmation !== 'DELETE'}
+                      onClick={handleAccountDelete}
+                    >
+                      Delete Permanently
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Box>
             )}
           </Box>
