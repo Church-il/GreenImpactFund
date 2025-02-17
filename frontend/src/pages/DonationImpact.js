@@ -1,32 +1,44 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import PageWrapper from '../components/PageWrapper';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import PageWrapper from "../components/PageWrapper";
 
 const ImpactContainer = styled.div`
   max-width: 1200px;
   margin: auto;
   padding: 40px 20px;
   text-align: center;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  background: linear-gradient(135deg, #0f9d58, #34a853);
   border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h2`
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 20px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 `;
 
 const Subtitle = styled.p`
   font-size: 1.2rem;
   max-width: 800px;
-  margin: 0 auto 40px;
-  color: #f5f5f5;
+  margin: 0 auto 30px;
+  color: #f0f0f0;
   line-height: 1.8;
+`;
+
+const SearchBar = styled.input`
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 20px;
 `;
 
 const StoriesGrid = styled.div`
@@ -39,9 +51,10 @@ const StoryCard = styled(motion.div)`
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  position: relative;
 
   &:hover {
     transform: scale(1.05);
@@ -53,6 +66,12 @@ const StoryImage = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
+  filter: brightness(90%);
+  transition: filter 0.3s ease-in-out;
+
+  &:hover {
+    filter: brightness(60%);
+  }
 `;
 
 const StoryContent = styled.div`
@@ -61,14 +80,54 @@ const StoryContent = styled.div`
 
 const StoryTitle = styled.h4`
   color: #2e7d32;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin-bottom: 10px;
 `;
 
 const StoryDescription = styled.p`
-  color: #666;
+  color: #555;
   font-size: 1rem;
   line-height: 1.6;
+`;
+
+const LocationTag = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 150, 50, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+`;
+
+const ProgressBarContainer = styled.div`
+  background: #ddd;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 10px;
+`;
+
+const ProgressBar = styled(motion.div)`
+  height: 100%;
+  background: #0f9d58;
+  width: ${(props) => props.width}%;
+`;
+
+const DarkModeToggle = styled.button`
+  background: #222;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 20px;
+
+  &:hover {
+    background: #444;
+  }
 `;
 
 const Modal = styled.div`
@@ -116,22 +175,42 @@ const stories = [
 
 const DonationImpact = () => {
   const [selectedStory, setSelectedStory] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+
+  const filteredStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <PageWrapper>
+    <PageWrapper style={{ background: darkMode ? "#121212" : "#ffffff" }}>
       <ImpactContainer>
         <Title>Impact of Your Donations</Title>
         <Subtitle>See how your contributions are changing lives across Kenya.</Subtitle>
+        <SearchBar
+          type="text"
+          placeholder="Search for an impact story..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <StoriesGrid>
-          {stories.map((story) => (
+          {filteredStories.map((story) => (
             <StoryCard key={story.id} onClick={() => setSelectedStory(story)}>
+              <LocationTag>{story.location}</LocationTag>
               <StoryImage src={story.img} alt={story.title} />
               <StoryContent>
                 <StoryTitle>{story.title}</StoryTitle>
                 <StoryDescription>{story.desc}</StoryDescription>
+                <ProgressBarContainer>
+                  <ProgressBar width={story.impact} />
+                </ProgressBarContainer>
               </StoryContent>
             </StoryCard>
           ))}
         </StoriesGrid>
+        <DarkModeToggle onClick={() => setDarkMode(!darkMode)}>
+          Toggle Dark Mode
+        </DarkModeToggle>
       </ImpactContainer>
       {selectedStory && (
         <Modal onClick={() => setSelectedStory(null)}>
