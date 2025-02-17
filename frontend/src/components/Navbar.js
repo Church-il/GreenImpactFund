@@ -132,6 +132,22 @@ function Navbar() {
               <Button
                 color="inherit"
                 sx={{
+                  marginRight: 2,
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#673AB7',
+                    color: '#fff',
+                  },
+                }}
+                onClick={() => navigate('/donation-impact')}
+                startIcon={<Favorite />}
+              >
+                Impact
+              </Button>
+              <Button
+                color="inherit"
+                sx={{
                   fontSize: '16px',
                   fontWeight: 'bold',
                   '&:hover': {
