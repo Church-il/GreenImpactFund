@@ -11,54 +11,60 @@ const API_URL = process.env.REACT_APP_ENV === 'production'
 
 const HeroSection = styled.div`
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
   background: linear-gradient(135deg, #81c784, #66bb6a);
   color: white;
-  border-radius: 12px;
-  margin-bottom: 40px;
+  border-radius: 20px;
+  margin-bottom: 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h3`
   font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 2.5rem;
+  margin-bottom: 30px;
+  font-size: 3rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 `;
 
 const SubText = styled.p`
-  max-width: 800px;
+  max-width: 850px;
   margin: 0 auto;
-  margin-bottom: 30px;
-  line-height: 1.8;
-  font-size: 1.1rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  font-size: 1.2rem;
+  color: #f1f1f1;
 `;
 
 const LearnButton = styled.button`
   background-color: #2e7d32;
   color: white;
-  padding: 12px 24px;
-  font-size: 1rem;
-  border-radius: 30px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  border-radius: 40px;
   cursor: pointer;
   border: none;
+  transition: background-color 0.3s, transform 0.2s;
 
   &:hover {
     background-color: #1b5e20;
+    transform: scale(1.05);
   }
 `;
 
 const OrganizationsTitle = styled.button`
   display: inline-block;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-weight: bold;
   color: white;
   background-color: #2e7d32;
   border: none;
-  font-size: 1.2rem;
-  padding: 10px 20px;
-  border-radius: 30px;
+  font-size: 1.3rem;
+  padding: 14px 24px;
+  border-radius: 40px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s, transform 0.2s;
 
   &:hover {
     background-color: #1b5e20;
@@ -68,17 +74,18 @@ const OrganizationsTitle = styled.button`
 
 const OrganizationsSubText = styled.p`
   text-align: center;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  margin-bottom: 40px;
-  line-height: 1.8;
-  font-size: 1.1rem;
+  margin-bottom: 50px;
+  line-height: 1.6;
+  font-size: 1.15rem;
+  color: #616161;
 `;
 
 const OrganizationCard = styled.div`
   height: 100%;
-  border-radius: 12px;
-  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -86,45 +93,56 @@ const OrganizationCard = styled.div`
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 6px 6px 18px rgba(0, 0, 0, 0.2);
+    box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.2);
   }
 `;
 
 const OrganizationImage = styled.img`
-  height: 160px;
+  height: 200px;
+  width: 100%;
   object-fit: cover;
+  transition: transform 0.3s;
+
+  ${OrganizationCard}:hover & {
+    transform: scale(1.1);
+  }
 `;
 
 const OrganizationContent = styled.div`
-  padding: 20px;
+  padding: 25px;
   text-align: center;
   flex-grow: 1;
+  background-color: #ffffff;
+  border-top: 1px solid #f1f1f1;
 `;
 
 const OrgName = styled.h6`
   font-weight: bold;
   color: #2e7d32;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
 `;
 
 const OrgDescription = styled.p`
   color: #616161;
   margin-bottom: 20px;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 1rem;
 `;
 
 const DonateButton = styled.button`
   margin-top: auto;
-  padding: 8px 16px;
+  padding: 12px 24px;
   background-color: #66bb6a;
   color: white;
-  border-radius: 20px;
+  border-radius: 25px;
   cursor: pointer;
   border: none;
+  transition: background-color 0.3s, transform 0.2s;
 
   &:hover {
     background-color: #388e3c;
+    transform: scale(1.05);
   }
 `;
 
@@ -173,9 +191,9 @@ const Home = () => {
           Explore organizations devoted to restoring lush forests, safeguarding endangered wildlife, reducing harmful carbon emissions, and promoting innovative solutions for a sustainable future. Each cause holds the power to create positive change—choose one that inspires you and take the first step toward making a lasting difference. Together, we can build a healthier planet and secure a brighter future for generations to come.
         </OrganizationsSubText>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'center' }}>
           {organizations.map((org) => (
-            <div key={org.id} style={{ flex: '1 0 30%' }}>
+            <div key={org.id} style={{ flex: '1 0 28%' }}>
               <OrganizationCard>
                 {org.image && <OrganizationImage src={org.image} alt={`${org.name} logo`} />}
                 <OrganizationContent>
