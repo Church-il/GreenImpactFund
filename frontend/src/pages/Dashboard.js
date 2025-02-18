@@ -147,7 +147,7 @@ const Dashboard = () => {
       title: 'Donation History',
       description: 'Review past donations and manage your receipts for tax purposes.',
       icon: <History style={{ fontSize: 50, color: '#66bb6a' }} />,
-      link: '/history',
+      link: '/donations',
     },
     {
       title: 'Settings',
